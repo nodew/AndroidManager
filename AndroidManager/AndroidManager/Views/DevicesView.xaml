@@ -1,0 +1,98 @@
+﻿<Page
+    x:Class="AndroidManager.Views.DevicesView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:AndroidManager.Views"
+    xmlns:adb="using:SharpAdbClient"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Page.Resources>
+        <DataTemplate x:Name="deviceCardTemplate" x:DataType="adb:DeviceData" >
+            <StackPanel Padding="12" Orientation="Vertical">
+                <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
+                    <TextBlock Text="Name:" Width="60"></TextBlock>
+                    <TextBlock Text="{x:Bind Name}"></TextBlock>
+                </StackPanel>
+                <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
+                    <TextBlock Text="Model:" Width="60"></TextBlock>
+                    <TextBlock Text="{x:Bind Model}"></TextBlock>
+                </StackPanel>
+                <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
+                    <TextBlock Text="Serial:" Width="60"></TextBlock>
+                    <TextBlock Text="{x:Bind Serial}"></TextBlock>
+                </StackPanel>
+                <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
+                    <TextBlock Text="State:" Width="60"></TextBlock>
+                    <TextBlock Text="{x:Bind State}"></TextBlock>
+                </StackPanel>
+            </StackPanel>
+        </DataTemplate>
+    </Page.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock
+                x:Uid="DevicesPageTitle" 
+                Grid.Column="0"
+                Style="{StaticResource PageTitle}" />
+            <CommandBar DefaultLabelPosition="Right" Background="Transparent" Grid.Column="1" Margin="0 0 24 0">
+                <AppBarButton
+                    Background="Transparent"
+                    Icon="Add" 
+                    Label="Add"
+                    Click="AppBarButton_Click" />
+                <AppBarButton
+                    Background="Transparent"
+                    Icon="Refresh" 
+                    Label="Refresh"
+                    Command="{x:Bind viewModel.RefreshConnectedDevicesCommand}" />
+            </CommandBar>
+        </Grid>
+        <ListView
+            Grid.Row="1"
+            x:Name="deviceListView"
+            IsItemClickEnabled="True"
+            ItemClick="DevicesGrid_ItemClick"
+            ItemsSource="{x:Bind viewModel.Devices}"
+            ItemTemplate="{StaticResource deviceCardTemplate}"
+            Margin="24 12"
+            SelectionMode="Single">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="Margin" Value="0 0 0 12"/>
+                </Style>
+            </ListView.ItemContainerStyle>
+        </ListView>
+        <StackPanel Grid.Row="1" Visibility="{x:Bind viewModel.HasNoDevice}">
+            <TextBlock Text="There's no connected device, please add one to continue"></TextBlock>
+        </StackPanel>
+        <ContentDialog 
+            x:Name="addNewDeviceDialog"
+            PrimaryButtonText="Connect"
+            Title="Add device"
+            CloseButtonText="Cancel">
+            <StackPanel>
+                <TextBox x:Name="deviceHostTextBox" Header="Host" Text="{x:Bind viewModel.DeviceHost, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox x:Name="devicePortTextBox" Header="Port" Text="{x:Bind viewModel.DevicePort, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            </StackPanel>
+        </ContentDialog>
+        <ContentDialog 
+            x:Name="failedToAddNewDeviceDialog"
+            PrimaryButtonText="Confirm"
+            Title="Failed to connect device"
+            CloseButtonText="Cancel">
+            <StackPanel>
+                <TextBlock x:Name="errorMessage" />
+            </StackPanel>
+        </ContentDialog>
+    </Grid>
+</Page>
