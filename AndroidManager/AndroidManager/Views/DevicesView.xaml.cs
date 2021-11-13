@@ -28,11 +28,11 @@ namespace AndroidManager.Views
     /// </summary>
     public sealed partial class DevicesView : Page
     {
-        private IDevicesViewModel viewModel;
+        private DevicesViweModel viewModel;
 
         public DevicesView()
         {
-            viewModel = App.Current.Services.GetService<IDevicesViewModel>();
+            viewModel = App.Current.Services.GetService<DevicesViweModel>();
             this.InitializeComponent();
             WeakReferenceMessenger.Default.Register<FailedToAddDeviceEvent>(this, async (o, e) =>
             {
@@ -44,7 +44,7 @@ namespace AndroidManager.Views
 
         private void DevicesGrid_ItemClick(object sender, ItemClickEventArgs e)
         {
-
+            
         }
 
         private async void AppBarButton_Click(object sender, RoutedEventArgs e)
@@ -66,6 +66,5 @@ namespace AndroidManager.Views
             deviceHostTextBox.Text = String.Empty;
             devicePortTextBox.Text = String.Empty;
         }
-
     }
 }

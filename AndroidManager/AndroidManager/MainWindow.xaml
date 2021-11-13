@@ -4,11 +4,12 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:AndroidManager"
     xmlns:m="using:AndroidManager.Models"
+    xmlns:views="using:AndroidManager.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <NavigationView 
+    <!--<NavigationView 
         x:Name="sideNav"
         Loaded="SideNav_Loaded"
         SelectionChanged="SideNav_SelectionChanged"
@@ -25,5 +26,6 @@
             </DataTemplate>
         </NavigationView.MenuItemTemplate>
         <Frame x:Name="content" Margin="0 20 0 0" />
-    </NavigationView>
+    </NavigationView>-->
+    <Frame Name="mainFrame" Loaded="MainFrame_Loaded" />
 </Window>

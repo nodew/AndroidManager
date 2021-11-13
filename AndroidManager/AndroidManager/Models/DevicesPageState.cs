@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AndroidManager.ViewModels
+namespace AndroidManager.Models
 {
-    internal interface IPackagesViewModel
+    public enum DevicesPageState
     {
+        NoRunningServer = 0,
+        NoDevice,
+        HasDevices
     }
 }

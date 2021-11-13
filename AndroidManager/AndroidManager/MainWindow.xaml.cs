@@ -29,59 +29,14 @@ namespace AndroidManager
     /// </summary>
     public sealed partial class MainWindow : Window
     {
-        private readonly List<NavNode> nodes = new()
-        {
-            new NavNode() { Name = View.Devices, Page = typeof(DevicesView) },
-            new NavNode() { Name = View.Packages, Page = typeof(PackagesView) },
-            new NavNode() { Name = View.Services, Page = typeof(ServicesView) },
-            new NavNode() { Name = View.Explorer, Page = typeof(FileExplorerView) },
-            new NavNode() { Name = View.Settings, Page = typeof(SettingsView) }
-        };
-
-        private readonly MainWindowViewModel viewModel;
-
         public MainWindow()
         {
-            viewModel = App.Current.Services.GetService<MainWindowViewModel>();
             this.InitializeComponent();
-            WeakReferenceMessenger.Default.Register<ViewChangedEvent>(this, (r, m) => NavigateToNextPage(m.NextView));
         }
 
-        private void NavigateToNextPage(string viewName)
+        private void MainFrame_Loaded(object sender, RoutedEventArgs e)
         {
-            Type page = nodes.Where(x => x.Name == viewName).FirstOrDefault().Page;
-            if (page != null)
-            {
-                content.Navigate(page);
-            }
-        }
-
-        private void SideNav_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
-        {
-            if (args != null)
-            {
-                string view;
-                if (args.IsSettingsSelected)
-                {
-                    view = View.Settings;
-                }
-                else
-                {
-                    view = ((MenuItem)args.SelectedItem).Name;
-                }
-                viewModel.SelectedSideNavCommand.Execute(view);
-            }
-        }
-
-        private void SideNav_Loaded(object sender, RoutedEventArgs e)
-        {
-            NavigateToNextPage(viewModel.CurrentView);
-        }
-
-        private record NavNode
-        {
-            public string Name;
-            public Type Page;
+            mainFrame.Content = new DevicesView();
         }
     }
 }

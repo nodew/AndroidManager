@@ -60,11 +60,11 @@ namespace AndroidManager
             var services = new ServiceCollection();
 
             services.AddSingleton<MainWindowViewModel>();
-            services.AddTransient<IDevicesViewModel, DevicesViweModel>();
-            services.AddTransient<IPackagesViewModel, PackagesViewModel>();
-            services.AddTransient<IServicesViewModel, ServicesViewModel>();
-            services.AddTransient<IFileExplorerViewModel, FileExplorerViewModel>();
-            services.AddTransient<ISettingsViewModel, SettingsViewModel>();
+            services.AddSingleton<DevicesViweModel, DevicesViweModel>();
+            services.AddTransient<PackagesViewModel, PackagesViewModel>();
+            services.AddTransient<ServicesViewModel, ServicesViewModel>();
+            services.AddTransient<FileExplorerViewModel, FileExplorerViewModel>();
+            services.AddTransient<SettingsViewModel, SettingsViewModel>();
 
             return services.BuildServiceProvider();
         }

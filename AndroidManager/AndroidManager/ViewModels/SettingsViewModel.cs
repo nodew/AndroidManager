@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AndroidManager.ViewModels
 {
-    public class SettingsViewModel : ViewModelBase, ISettingsViewModel
+    public class SettingsViewModel : ViewModelBase
     {
     }
 }

@@ -13,25 +13,29 @@ using System.Windows.Input;
 
 namespace AndroidManager.ViewModels
 {
-    public class DevicesViweModel : ViewModelBase, IDevicesViewModel
+    public class DevicesViweModel : ViewModelBase
     {
         private readonly ObservableCollection<DeviceData> _devices;
-        private AdbClient _adbClient;
+        private readonly AdbClient _adbClient;
         private DeviceData _selectedDeivce;
 
         private string _deviceHost;
         private string _devicePort;
+        private DevicesPageState _pageState;
 
         public DevicesViweModel()
         {
             _adbClient = new AdbClient();
             _devices = new ObservableCollection<DeviceData>();
+            _pageState = DevicesPageState.NoRunningServer;
 
             RefreshConnectedDevicesCommand = new RelayCommand(RefreshConnectedDevices);
             ConnectToNewDeviceCommand = new RelayCommand(ConnectToNewDevice, CanConnectToNewDevice);
             ClearInputCommand = new RelayCommand(ClearInput);
-
-            LoadConnectedDevices();
+            if (AdbServer.Instance.GetStatus().IsRunning)
+            {
+                LoadConnectedDevices();
+            }
         }
 
         public ICommand RefreshConnectedDevicesCommand { get; }
@@ -43,9 +47,15 @@ namespace AndroidManager.ViewModels
             get { return _devices; }
         }
 
-        public bool HasNoDevice
+        public bool HasDevices
         {
-            get { return _devices.Count == 0; }
+            get { return _devices.Count > 0; }
+        }
+
+        public DevicesPageState PageState
+        {
+            get { return _pageState; }
+            set {  SetProperty(ref _pageState, value); }
         }
 
         public DeviceData SelectedDeivce 
@@ -66,10 +76,26 @@ namespace AndroidManager.ViewModels
 
         private void LoadConnectedDevices()
         {
-            var devices = _adbClient.GetDevices();
-            foreach (var device in devices)
+            try
             {
-                Devices.Add(device);
+                var devices = _adbClient.GetDevices();
+                foreach (var device in devices)
+                {
+                    Devices.Add(device);
+                }
+
+                if (Devices.Count > 0)
+                {
+                    PageState = DevicesPageState.HasDevices;
+                }
+                else
+                {
+                    PageState = DevicesPageState.NoDevice;
+                }
+            }
+            catch (Exception)
+            {
+                PageState = DevicesPageState.NoRunningServer;
             }
         }
 

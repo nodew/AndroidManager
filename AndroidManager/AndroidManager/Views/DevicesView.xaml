@@ -3,12 +3,44 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:AndroidManager.Views"
+    xmlns:vm="using:AndroidManager.ViewModels"
+    xmlns:converters="using:AndroidManager.Converters"
     xmlns:adb="using:SharpAdbClient"
+    xmlns:interactions="using:Microsoft.Xaml.Interactions.Core" 
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Page.Resources>
+        <DataTemplate x:Name="deviceListTemplate" x:DataType="vm:DevicesViweModel">
+            <Grid>
+                <ListView
+                    x:Name="deviceListView"
+                    IsItemClickEnabled="True"
+                    ItemClick="DevicesGrid_ItemClick"
+                    ItemsSource="{x:Bind Devices}"
+                    ItemTemplate="{StaticResource deviceCardTemplate}"
+                    Margin="24 12"
+                    SelectionMode="Single" >
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="Margin" Value="0 0 0 12"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                </ListView>
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Name="noRunningAdbServerTemplate">
+            <StackPanel HorizontalAlignment="Stretch" Orientation="Vertical" Width="auto">
+                <TextBlock Text="Adb server isn't running" HorizontalAlignment="Center"></TextBlock>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Name="noDeviceTemplate">
+            <StackPanel HorizontalAlignment="Stretch" Orientation="Vertical">
+                <TextBlock Text="There's no connected device, please add one to continue" HorizontalAlignment="Center"></TextBlock>
+            </StackPanel>
+        </DataTemplate>
         <DataTemplate x:Name="deviceCardTemplate" x:DataType="adb:DeviceData" >
             <StackPanel Padding="12" Orientation="Vertical">
                 <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
@@ -29,26 +61,21 @@
                 </StackPanel>
             </StackPanel>
         </DataTemplate>
+        <converters:DevicesPageStateConverter x:Key="devicesPageStateConverter" />
     </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition />
+            <RowDefinition />
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="auto" />
-            </Grid.ColumnDefinitions>
-            <TextBlock
-                x:Uid="DevicesPageTitle" 
-                Grid.Column="0"
-                Style="{StaticResource PageTitle}" />
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
             <CommandBar DefaultLabelPosition="Right" Background="Transparent" Grid.Column="1" Margin="0 0 24 0">
                 <AppBarButton
+                    x:Name="addDeviceButton"
                     Background="Transparent"
                     Icon="Add" 
                     Label="Add"
+                    Visibility="Visible"
                     Click="AppBarButton_Click" />
                 <AppBarButton
                     Background="Transparent"
@@ -56,25 +83,51 @@
                     Label="Refresh"
                     Command="{x:Bind viewModel.RefreshConnectedDevicesCommand}" />
             </CommandBar>
-        </Grid>
-        <ListView
-            Grid.Row="1"
-            x:Name="deviceListView"
-            IsItemClickEnabled="True"
-            ItemClick="DevicesGrid_ItemClick"
-            ItemsSource="{x:Bind viewModel.Devices}"
-            ItemTemplate="{StaticResource deviceCardTemplate}"
-            Margin="24 12"
-            SelectionMode="Single">
-            <ListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem">
-                    <Setter Property="Margin" Value="0 0 0 12"/>
-                </Style>
-            </ListView.ItemContainerStyle>
-        </ListView>
-        <StackPanel Grid.Row="1" Visibility="{x:Bind viewModel.HasNoDevice}">
-            <TextBlock Text="There's no connected device, please add one to continue"></TextBlock>
         </StackPanel>
+        <ContentControl
+            x:Name="content"
+            Content="{x:Bind viewModel}"
+            ContentTemplate="{StaticResource noDeviceTemplate}"
+            Grid.Row="1">
+            <interactivity:Interaction.Behaviors>
+                <interactions:DataTriggerBehavior Binding="{x:Bind viewModel.PageState, Mode=OneWay, Converter={StaticResource devicesPageStateConverter}}" 
+                                                  ComparisonCondition="Equal" 
+                                                  Value="HasDevices">
+                    <interactions:ChangePropertyAction TargetObject="{Binding ElementName=content}" 
+                                                       PropertyName="ContentTemplate" 
+                                                       Value="{StaticResource deviceListTemplate}">
+                    </interactions:ChangePropertyAction>
+                </interactions:DataTriggerBehavior>
+                <interactions:DataTriggerBehavior Binding="{x:Bind viewModel.PageState, Mode=OneWay, Converter={StaticResource devicesPageStateConverter}}" 
+                                                  ComparisonCondition="Equal" 
+                                                  Value="NoDevice">
+                    <interactions:ChangePropertyAction TargetObject="{Binding ElementName=content}" 
+                                                       PropertyName="ContentTemplate" 
+                                                       Value="{StaticResource noDeviceTemplate}">
+                    </interactions:ChangePropertyAction>
+                </interactions:DataTriggerBehavior>
+                <interactions:DataTriggerBehavior Binding="{x:Bind viewModel.PageState, Mode=OneWay, Converter={StaticResource devicesPageStateConverter}}" 
+                                                  ComparisonCondition="Equal" 
+                                                  Value="NoRunningServer">
+                    <interactions:ChangePropertyAction TargetObject="{Binding ElementName=content}" 
+                                                       PropertyName="ContentTemplate" 
+                                                       Value="{StaticResource noRunningAdbServerTemplate}">
+                    </interactions:ChangePropertyAction>
+                    <interactions:ChangePropertyAction TargetObject="{Binding ElementName=addDeviceButton}" 
+                                                       PropertyName="Visibility" 
+                                                       Value="Collapsed">
+                    </interactions:ChangePropertyAction>
+                </interactions:DataTriggerBehavior>
+                <interactions:DataTriggerBehavior Binding="{x:Bind viewModel.PageState, Mode=OneWay, Converter={StaticResource devicesPageStateConverter}}" 
+                                                  ComparisonCondition="NotEqual" 
+                                                  Value="NoRunningServer">
+                    <interactions:ChangePropertyAction TargetObject="{Binding ElementName=addDeviceButton}" 
+                                                       PropertyName="Visibility" 
+                                                       Value="Visible">
+                    </interactions:ChangePropertyAction>
+                </interactions:DataTriggerBehavior>
+            </interactivity:Interaction.Behaviors>
+        </ContentControl>
         <ContentDialog 
             x:Name="addNewDeviceDialog"
             PrimaryButtonText="Connect"

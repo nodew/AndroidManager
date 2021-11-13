@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AndroidManager.ViewModels
 {
-    public class FileExplorerViewModel : ViewModelBase, IFileExplorerViewModel
+    public class FileExplorerViewModel : ViewModelBase
     {
     }
 }
