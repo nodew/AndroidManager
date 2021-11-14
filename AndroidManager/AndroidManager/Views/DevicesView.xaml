@@ -13,33 +13,38 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Page.Resources>
+        <Style TargetType="TextBlock" x:Name="noDataWarning">
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
         <DataTemplate x:Name="deviceListTemplate" x:DataType="vm:DevicesViweModel">
-            <Grid>
-                <ListView
-                    x:Name="deviceListView"
-                    IsItemClickEnabled="True"
-                    ItemClick="DevicesGrid_ItemClick"
-                    ItemsSource="{x:Bind Devices}"
-                    ItemTemplate="{StaticResource deviceCardTemplate}"
-                    Margin="24 12"
-                    SelectionMode="Single" >
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="ListViewItem">
-                            <Setter Property="Margin" Value="0 0 0 12"/>
-                        </Style>
-                    </ListView.ItemContainerStyle>
-                </ListView>
-            </Grid>
+            <ListView
+                x:Name="deviceListView"
+                IsItemClickEnabled="True"
+                ItemClick="DeviceList_ItemClick"
+                ItemsSource="{x:Bind Devices}"
+                ItemTemplate="{StaticResource deviceCardTemplate}"
+                HorizontalContentAlignment="Stretch"
+                SelectionMode="Single" >
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="Margin" Value="0 0 0 12"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
+            </ListView>
         </DataTemplate>
         <DataTemplate x:Name="noRunningAdbServerTemplate">
-            <StackPanel HorizontalAlignment="Stretch" Orientation="Vertical" Width="auto">
-                <TextBlock Text="Adb server isn't running" HorizontalAlignment="Center"></TextBlock>
-            </StackPanel>
+            <Grid>
+                <TextBlock Text="Adb server isn't running, please check your settings" Style="{StaticResource noDataWarning}"></TextBlock>
+            </Grid>
         </DataTemplate>
         <DataTemplate x:Name="noDeviceTemplate">
-            <StackPanel HorizontalAlignment="Stretch" Orientation="Vertical">
-                <TextBlock Text="There's no connected device, please add one to continue" HorizontalAlignment="Center"></TextBlock>
-            </StackPanel>
+            <Grid>
+                <TextBlock Text="There's no connected device, please add one to continue" Style="{StaticResource noDataWarning}"></TextBlock>
+            </Grid>
         </DataTemplate>
         <DataTemplate x:Name="deviceCardTemplate" x:DataType="adb:DeviceData" >
             <StackPanel Padding="12" Orientation="Vertical">
@@ -61,12 +66,17 @@
                 </StackPanel>
             </StackPanel>
         </DataTemplate>
+        <ControlTemplate x:Name="contentControlTemplate" TargetType="ContentControl">
+            <Grid>
+                <ContentPresenter Margin="24 24"></ContentPresenter>
+            </Grid>
+        </ControlTemplate>
         <converters:DevicesPageStateConverter x:Key="devicesPageStateConverter" />
     </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition />
-            <RowDefinition />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
             <CommandBar DefaultLabelPosition="Right" Background="Transparent" Grid.Column="1" Margin="0 0 24 0">
@@ -86,44 +96,45 @@
         </StackPanel>
         <ContentControl
             x:Name="content"
+            Grid.Row="1"
             Content="{x:Bind viewModel}"
-            ContentTemplate="{StaticResource noDeviceTemplate}"
-            Grid.Row="1">
+            Template="{StaticResource contentControlTemplate}"
+            ContentTemplate="{StaticResource noDeviceTemplate}">
             <interactivity:Interaction.Behaviors>
                 <interactions:DataTriggerBehavior Binding="{x:Bind viewModel.PageState, Mode=OneWay, Converter={StaticResource devicesPageStateConverter}}" 
-                                                  ComparisonCondition="Equal" 
-                                                  Value="HasDevices">
+                                                    ComparisonCondition="Equal" 
+                                                    Value="HasDevices">
                     <interactions:ChangePropertyAction TargetObject="{Binding ElementName=content}" 
-                                                       PropertyName="ContentTemplate" 
-                                                       Value="{StaticResource deviceListTemplate}">
+                                                        PropertyName="ContentTemplate" 
+                                                        Value="{StaticResource deviceListTemplate}">
                     </interactions:ChangePropertyAction>
                 </interactions:DataTriggerBehavior>
                 <interactions:DataTriggerBehavior Binding="{x:Bind viewModel.PageState, Mode=OneWay, Converter={StaticResource devicesPageStateConverter}}" 
-                                                  ComparisonCondition="Equal" 
-                                                  Value="NoDevice">
+                                                    ComparisonCondition="Equal" 
+                                                    Value="NoDevice">
                     <interactions:ChangePropertyAction TargetObject="{Binding ElementName=content}" 
-                                                       PropertyName="ContentTemplate" 
-                                                       Value="{StaticResource noDeviceTemplate}">
+                                                        PropertyName="ContentTemplate" 
+                                                        Value="{StaticResource noDeviceTemplate}">
                     </interactions:ChangePropertyAction>
                 </interactions:DataTriggerBehavior>
                 <interactions:DataTriggerBehavior Binding="{x:Bind viewModel.PageState, Mode=OneWay, Converter={StaticResource devicesPageStateConverter}}" 
-                                                  ComparisonCondition="Equal" 
-                                                  Value="NoRunningServer">
+                                                    ComparisonCondition="Equal" 
+                                                    Value="NoRunningServer">
                     <interactions:ChangePropertyAction TargetObject="{Binding ElementName=content}" 
-                                                       PropertyName="ContentTemplate" 
-                                                       Value="{StaticResource noRunningAdbServerTemplate}">
+                                                        PropertyName="ContentTemplate" 
+                                                        Value="{StaticResource noRunningAdbServerTemplate}">
                     </interactions:ChangePropertyAction>
                     <interactions:ChangePropertyAction TargetObject="{Binding ElementName=addDeviceButton}" 
-                                                       PropertyName="Visibility" 
-                                                       Value="Collapsed">
+                                                        PropertyName="Visibility" 
+                                                        Value="Collapsed">
                     </interactions:ChangePropertyAction>
                 </interactions:DataTriggerBehavior>
                 <interactions:DataTriggerBehavior Binding="{x:Bind viewModel.PageState, Mode=OneWay, Converter={StaticResource devicesPageStateConverter}}" 
-                                                  ComparisonCondition="NotEqual" 
-                                                  Value="NoRunningServer">
+                                                    ComparisonCondition="NotEqual" 
+                                                    Value="NoRunningServer">
                     <interactions:ChangePropertyAction TargetObject="{Binding ElementName=addDeviceButton}" 
-                                                       PropertyName="Visibility" 
-                                                       Value="Visible">
+                                                        PropertyName="Visibility" 
+                                                        Value="Visible">
                     </interactions:ChangePropertyAction>
                 </interactions:DataTriggerBehavior>
             </interactivity:Interaction.Behaviors>

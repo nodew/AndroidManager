@@ -1,0 +1,44 @@
+﻿<Page
+    x:Class="AndroidManager.Views.DeviceDetailLandingView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:AndroidManager.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <NavigationView 
+        x:Name="deviceDetailNav" 
+        PaneDisplayMode="Top"
+        IsSettingsVisible="False"
+        IsBackEnabled="True"
+        BackRequested="DeviceDetailNav_BackRequested"
+        Loaded="DeviceDetailNav_Loaded"
+        SelectionChanged="DeviceDetailNav_SelectionChanged">
+        <NavigationView.MenuItems>
+            <NavigationViewItem  
+                Content="Packages" 
+                Tag="Packages" >
+                <NavigationViewItem.Icon>
+                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xF158;" />
+                </NavigationViewItem.Icon>
+            </NavigationViewItem>
+            <NavigationViewItem  
+                Content="Services" 
+                Tag="Services">
+                <NavigationViewItem.Icon>
+                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xF22C;" />
+                </NavigationViewItem.Icon>
+            </NavigationViewItem>
+            <NavigationViewItem  
+                Content="File Explorer"
+                Tag="FileExplorer" >
+                <NavigationViewItem.Icon>
+                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xED25;" />
+                </NavigationViewItem.Icon>
+            </NavigationViewItem>
+        </NavigationView.MenuItems>
+        <Frame x:Name="detailContent"/>
+    </NavigationView>
+</Page>

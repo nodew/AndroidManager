@@ -10,6 +10,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using SharpAdbClient;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -29,14 +30,42 @@ namespace AndroidManager
     /// </summary>
     public sealed partial class MainWindow : Window
     {
-        public MainWindow()
+        private static MainWindow _instance;
+
+        public new static MainWindow Current => _instance;
+
+        private MainWindow()
         {
             this.InitializeComponent();
         }
 
+        public static MainWindow GetInstance()
+        {
+            if (_instance == null)
+            {
+                _instance = new MainWindow();
+            }
+            return _instance;
+        }
+
         private void MainFrame_Loaded(object sender, RoutedEventArgs e)
         {
+            NavigateToDevicesView();
+        }
+
+        public void NavigateToDevicesView()
+        {
             mainFrame.Content = new DevicesView();
+        }
+
+        public void NavigateToDeviceDetailPage(DeviceData deviceData)
+        {
+            mainFrame.Navigate(typeof(DeviceDetailLandingView), deviceData);
+        }
+
+        public void NavigateToSettingsPage()
+        {
+            mainFrame.Navigate(typeof(SettingsView));
         }
     }
 }

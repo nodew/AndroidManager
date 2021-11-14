@@ -17,6 +17,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using System.Threading.Tasks;
+using SharpAdbClient;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -42,9 +43,11 @@ namespace AndroidManager.Views
             });
         }
 
-        private void DevicesGrid_ItemClick(object sender, ItemClickEventArgs e)
+        private void DeviceList_ItemClick(object sender, ItemClickEventArgs e)
         {
-            
+            DeviceData deviceData = (DeviceData)e.ClickedItem;
+            viewModel.SelectDeviceCommand.Execute(deviceData);
+            MainWindow.Current.NavigateToDeviceDetailPage(deviceData);
         }
 
         private async void AppBarButton_Click(object sender, RoutedEventArgs e)

@@ -17,7 +17,7 @@ namespace AndroidManager.ViewModels
     {
         private readonly ObservableCollection<DeviceData> _devices;
         private readonly AdbClient _adbClient;
-        private DeviceData _selectedDeivce;
+        private DeviceData _currentSelectedDeivce;
 
         private string _deviceHost;
         private string _devicePort;
@@ -28,10 +28,13 @@ namespace AndroidManager.ViewModels
             _adbClient = new AdbClient();
             _devices = new ObservableCollection<DeviceData>();
             _pageState = DevicesPageState.NoRunningServer;
+            _currentSelectedDeivce = null;
 
             RefreshConnectedDevicesCommand = new RelayCommand(RefreshConnectedDevices);
             ConnectToNewDeviceCommand = new RelayCommand(ConnectToNewDevice, CanConnectToNewDevice);
             ClearInputCommand = new RelayCommand(ClearInput);
+            SelectDeviceCommand = new RelayCommand<DeviceData>(SelectDevice);
+
             if (AdbServer.Instance.GetStatus().IsRunning)
             {
                 LoadConnectedDevices();
@@ -41,6 +44,7 @@ namespace AndroidManager.ViewModels
         public ICommand RefreshConnectedDevicesCommand { get; }
         public ICommand ConnectToNewDeviceCommand { get; }
         public ICommand ClearInputCommand { get; }
+        public ICommand SelectDeviceCommand { get; }
 
         public ObservableCollection<DeviceData> Devices
         {
@@ -58,10 +62,10 @@ namespace AndroidManager.ViewModels
             set {  SetProperty(ref _pageState, value); }
         }
 
-        public DeviceData SelectedDeivce 
+        public DeviceData CurrentSelectedDeivce 
         { 
-            get {  return _selectedDeivce; }
-            set { SetProperty(ref _selectedDeivce, value); }
+            get {  return _currentSelectedDeivce; }
+            set { SetProperty(ref _currentSelectedDeivce, value); }
         }
 
         public string DeviceHost { 
@@ -137,6 +141,11 @@ namespace AndroidManager.ViewModels
                 return false;
             }
             return true;
+        }
+
+        private void SelectDevice(DeviceData device)
+        {
+            CurrentSelectedDeivce = device;
         }
 
         private void ClearInput()
