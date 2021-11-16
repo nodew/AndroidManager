@@ -13,7 +13,7 @@ using System.Windows.Input;
 
 namespace AndroidManager.ViewModels
 {
-    public class DevicesViweModel : ViewModelBase
+    public class DevicesViewModel : ViewModelBase
     {
         private readonly ObservableCollection<DeviceData> _devices;
         private readonly AdbClient _adbClient;
@@ -23,9 +23,9 @@ namespace AndroidManager.ViewModels
         private string _devicePort;
         private DevicesPageState _pageState;
 
-        public DevicesViweModel()
+        public DevicesViewModel(AdbClient adbClient)
         {
-            _adbClient = new AdbClient();
+            _adbClient = adbClient;
             _devices = new ObservableCollection<DeviceData>();
             _pageState = DevicesPageState.NoRunningServer;
             _currentSelectedDeivce = null;
@@ -80,6 +80,7 @@ namespace AndroidManager.ViewModels
 
         private void LoadConnectedDevices()
         {
+            Devices.Clear();
             try
             {
                 var devices = _adbClient.GetDevices();
@@ -105,7 +106,6 @@ namespace AndroidManager.ViewModels
 
         private void RefreshConnectedDevices()
         {
-            Devices.Clear();
             LoadConnectedDevices();
         }
 

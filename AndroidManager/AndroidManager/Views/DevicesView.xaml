@@ -20,7 +20,7 @@
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
-        <DataTemplate x:Name="deviceListTemplate" x:DataType="vm:DevicesViweModel">
+        <DataTemplate x:Name="deviceListTemplate" x:DataType="vm:DevicesViewModel">
             <ListView
                 x:Name="deviceListView"
                 IsItemClickEnabled="True"
@@ -79,7 +79,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
-            <CommandBar DefaultLabelPosition="Right" Background="Transparent" Grid.Column="1" Margin="0 0 24 0">
+            <CommandBar DefaultLabelPosition="Right" Background="Transparent" Margin="0 0 24 0">
                 <AppBarButton
                     x:Name="addDeviceButton"
                     Background="Transparent"

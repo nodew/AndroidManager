@@ -36,25 +36,6 @@ namespace AndroidManager.Views
             this.InitializeComponent();
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
-        {
-            DeviceData deviceData = null;
-
-            if (e != null && e.Parameter != null)
-            {
-                deviceData = e.Parameter as DeviceData;
-            }
-
-            if (deviceData == null)
-            {
-                deviceDetailNav.Header = "Invalid device";
-            }
-            else
-            {
-                deviceDetailNav.Header = $"{deviceData.Name}({deviceData.Model})";
-            }
-        }
-
         private void DeviceDetailNav_BackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs args)
         {
             MainWindow.Current.NavigateToDevicesView();

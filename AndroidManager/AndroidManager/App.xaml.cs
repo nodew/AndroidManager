@@ -8,6 +8,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Shapes;
+using SharpAdbClient;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -58,9 +59,9 @@ namespace AndroidManager
         private static IServiceProvider ConfigureServices()
         {
             var services = new ServiceCollection();
-
+            services.AddSingleton<AdbClient>();
             services.AddSingleton<MainWindowViewModel>();
-            services.AddSingleton<DevicesViweModel, DevicesViweModel>();
+            services.AddSingleton<DevicesViewModel, DevicesViewModel>();
             services.AddTransient<PackagesViewModel, PackagesViewModel>();
             services.AddTransient<ServicesViewModel, ServicesViewModel>();
             services.AddTransient<FileExplorerViewModel, FileExplorerViewModel>();

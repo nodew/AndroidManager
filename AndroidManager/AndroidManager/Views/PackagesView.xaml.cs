@@ -1,4 +1,6 @@
-﻿using Microsoft.UI.Xaml;
+﻿using AndroidManager.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
@@ -12,6 +14,8 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
+using Windows.Storage.Pickers;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -23,9 +27,29 @@ namespace AndroidManager.Views
     /// </summary>
     public sealed partial class PackagesView : Page
     {
+
+        private PackagesViewModel viewModel;
+
         public PackagesView()
         {
+            this.viewModel = App.Current.Services.GetService<PackagesViewModel>();
             this.InitializeComponent();
+        }
+
+        private async void InstallPackageButton_Click(object sender, RoutedEventArgs e)
+        {
+            var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(MainWindow.Current);
+            FileOpenPicker picker = new FileOpenPicker
+                {
+                    SuggestedStartLocation = PickerLocationId.HomeGroup
+                };
+            picker.FileTypeFilter.Add(".apk");
+            WinRT.Interop.InitializeWithWindow.Initialize(picker, hwnd);
+            StorageFile file = await picker.PickSingleFileAsync();
+            if (file != null)
+            {
+                viewModel.InstallNewPackageCommand.Execute(file.Path);
+            }
         }
     }
 }

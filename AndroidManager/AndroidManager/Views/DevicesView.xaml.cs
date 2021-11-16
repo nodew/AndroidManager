@@ -29,11 +29,11 @@ namespace AndroidManager.Views
     /// </summary>
     public sealed partial class DevicesView : Page
     {
-        private DevicesViweModel viewModel;
+        private DevicesViewModel viewModel;
 
         public DevicesView()
         {
-            viewModel = App.Current.Services.GetService<DevicesViweModel>();
+            viewModel = App.Current.Services.GetService<DevicesViewModel>();
             this.InitializeComponent();
             WeakReferenceMessenger.Default.Register<FailedToAddDeviceEvent>(this, async (o, e) =>
             {

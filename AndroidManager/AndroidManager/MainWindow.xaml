@@ -7,25 +7,6 @@
     xmlns:views="using:AndroidManager.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
-
-    <!--<NavigationView 
-        x:Name="sideNav"
-        Loaded="SideNav_Loaded"
-        SelectionChanged="SideNav_SelectionChanged"
-        OpenPaneLength="240"
-        CompactModeThresholdWidth="680"
-        MenuItemsSource="{x:Bind viewModel.MenuItems}">
-        <NavigationView.MenuItemTemplate>
-            <DataTemplate x:DataType="m:MenuItem">
-                <NavigationViewItem Content="{x:Bind DisplayName}" Tag="{x:Bind Name}">
-                    <NavigationViewItem.Icon>
-                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="{x:Bind Glyph}"/>
-                    </NavigationViewItem.Icon>
-                </NavigationViewItem>
-            </DataTemplate>
-        </NavigationView.MenuItemTemplate>
-        <Frame x:Name="content" Margin="0 20 0 0" />
-    </NavigationView>-->
+    mc:Ignorable="d" >
     <Frame Name="mainFrame" Loaded="MainFrame_Loaded" />
 </Window>

@@ -37,6 +37,7 @@ namespace AndroidManager
         private MainWindow()
         {
             this.InitializeComponent();
+            this.Title = "Android manager";
         }
 
         public static MainWindow GetInstance()
