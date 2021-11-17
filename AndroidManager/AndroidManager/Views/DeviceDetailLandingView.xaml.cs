@@ -27,7 +27,7 @@ namespace AndroidManager.Views
         private readonly Dictionary<string, Type> viewMapping = new()
         {
             { "Packages", typeof(PackagesView) },
-            { "Services", typeof(ServicesView) },
+            { "Processes", typeof(ProcessesView) },
             { "FileExplorer", typeof(FileExplorerView) }
         };
 

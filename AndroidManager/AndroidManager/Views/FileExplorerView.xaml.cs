@@ -1,4 +1,6 @@
-﻿using Microsoft.UI.Xaml;
+﻿using AndroidManager.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
@@ -23,9 +25,18 @@ namespace AndroidManager.Views
     /// </summary>
     public sealed partial class FileExplorerView : Page
     {
+
+        private FileExplorerViewModel viewModel;
+
         public FileExplorerView()
         {
+            viewModel = App.Current.Services.GetService<FileExplorerViewModel>();
             this.InitializeComponent();
+        }
+
+        private void FileListView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            viewModel.NavigateToSubFolderCommand.Execute(e.ClickedItem);
         }
     }
 }

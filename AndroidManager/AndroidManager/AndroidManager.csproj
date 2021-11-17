@@ -25,7 +25,7 @@
     <None Remove="Views\DevicesView.xaml" />
     <None Remove="Views\FileExplorerView.xaml" />
     <None Remove="Views\PackagesView.xaml" />
-    <None Remove="Views\ServicesView.xaml" />
+    <None Remove="Views\ProcessesView.xaml" />
     <None Remove="Views\SettingsView.xaml" />
   </ItemGroup>
 
@@ -57,7 +57,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Views\ServicesView.xaml">
+    <Page Update="Views\ProcessesView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

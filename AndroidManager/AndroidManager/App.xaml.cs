@@ -63,7 +63,7 @@ namespace AndroidManager
             services.AddSingleton<MainWindowViewModel>();
             services.AddSingleton<DevicesViewModel, DevicesViewModel>();
             services.AddTransient<PackagesViewModel, PackagesViewModel>();
-            services.AddTransient<ServicesViewModel, ServicesViewModel>();
+            services.AddTransient<ProcessesViewModel, ProcessesViewModel>();
             services.AddTransient<FileExplorerViewModel, FileExplorerViewModel>();
             services.AddTransient<SettingsViewModel, SettingsViewModel>();
 

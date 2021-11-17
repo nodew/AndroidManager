@@ -1,4 +1,6 @@
-﻿using Microsoft.UI.Xaml;
+﻿using AndroidManager.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
@@ -21,10 +23,13 @@ namespace AndroidManager.Views
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class ServicesView : Page
+    public sealed partial class ProcessesView : Page
     {
-        public ServicesView()
+        private ProcessesViewModel viewModel;
+
+        public ProcessesView()
         {
+            viewModel = App.Current.Services.GetService<ProcessesViewModel>();
             this.InitializeComponent();
         }
     }
