@@ -1,4 +1,5 @@
-﻿using Microsoft.Toolkit.Mvvm.Input;
+﻿using AndroidManager.Models;
+using Microsoft.Toolkit.Mvvm.Input;
 using SharpAdbClient;
 using System;
 using System.Collections.Generic;
@@ -12,29 +13,26 @@ namespace AndroidManager.ViewModels
 {
     public class FileExplorerViewModel : ViewModelBase
     {
-        private SyncService _syncService;
+        private AdbClient _adbClient;
         private DeviceData _device;
         private Stack<string> _parentFolder;
         private string _currentFolder;
-        private ObservableCollection<FileStatistics> _files;
+        private ObservableCollection<FileItem> _files;
 
         public FileExplorerViewModel(AdbClient adbClient, DevicesViewModel devicesViewModel)
         {
+            _adbClient = adbClient;
             _device = devicesViewModel.CurrentSelectedDeivce;
-            _syncService = new SyncService(adbClient, _device);
             _parentFolder = new Stack<string>();
-            _files = new ObservableCollection<FileStatistics>();
+            _files = new ObservableCollection<FileItem>();
             _currentFolder = "/";
 
-            NavigateToSubFolderCommand = new RelayCommand<FileStatistics>(NavigateToSubFolder, IsDerectory);
-            NavigateToUpperFolderCommand = new RelayCommand(NavigateToUpperFolder, IsRootDirectory);
+            NavigateToFolderCommand = new RelayCommand<FileItem>(NavigateToFolder, IsDerectory);
 
             LoadChildItems(_currentFolder);
         }
 
-        public ICommand NavigateToSubFolderCommand;
-        public ICommand NavigateToUpperFolderCommand;
-
+        public ICommand NavigateToFolderCommand;
         public ICommand UploadFileCommand;
         public ICommand DownloadFileCommand;
 
@@ -44,7 +42,7 @@ namespace AndroidManager.ViewModels
             set { SetProperty(ref _currentFolder, value); }
         }
 
-        public ObservableCollection<FileStatistics> Files
+        public ObservableCollection<FileItem> Files
         {
             get { return _files; }
             set { SetProperty(ref _files, value); }
@@ -54,32 +52,48 @@ namespace AndroidManager.ViewModels
         {
             Files.Clear();
             var absolutePath = string.Join('/', _parentFolder) + path;
+            using SyncService syncService = new SyncService(_adbClient, _device);
             try
             {
-                var files = _syncService.GetDirectoryListing(absolutePath)
-                    .OrderBy(file => file.FileMode & UnixFileMode.Directory);
+                var items = syncService.GetDirectoryListing(absolutePath)
+                    .Where(file => !((file.Path == ".") || (file.Path == "..")))
+                    .Select(file => FileItem.FromFileStatistics(file));
+
+                var folders = items.Where(file => file.IsDirectory)
+                    .OrderBy(file => file.Name);
+                
+                var files = items.Where(file => !file.IsDirectory)
+                    .OrderBy(file => file.Name);
+
+                Files.Add(new FileItem { Name = "..", IsDirectory = true });
+                
+                foreach (var folder in folders)
+                {
+                    Files.Add(folder);
+                }
+
                 foreach (var file in files)
                 {
                     Files.Add(file);
                 }
-            } 
+            }
             catch (Exception ex)
             {
 
             }
         }
 
-        private void NavigateToSubFolder(FileStatistics file)
+        private void NavigateToFolder(FileItem file)
         {
-            if (file.Path == ".." && !IsRootDirectory())
+            if (file.Name == ".." && !IsRootDirectory())
             {
                 NavigateToUpperFolder();
             }
             else
             {
                 _parentFolder.Push(_currentFolder);
-                CurrentFolder = file.Path;
-                LoadChildItems(file.Path);
+                CurrentFolder = file.Name;
+                LoadChildItems(file.Name);
             }
         }
 
@@ -89,14 +103,14 @@ namespace AndroidManager.ViewModels
             LoadChildItems(CurrentFolder);
         }
 
-        private bool IsDerectory(FileStatistics file)
+        private bool IsDerectory(FileItem file)
         {
-            return file.FileMode.HasFlag(UnixFileMode.Directory) && file.Path != ".";
+            return file.IsDirectory;
         }
 
         private bool IsRootDirectory()
         {
-            return _currentFolder != "/";
+            return _currentFolder == "/";
         }
     }
 }

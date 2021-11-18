@@ -36,7 +36,7 @@ namespace AndroidManager.Views
 
         private void FileListView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            viewModel.NavigateToSubFolderCommand.Execute(e.ClickedItem);
+            viewModel.NavigateToFolderCommand.Execute(e.ClickedItem);
         }
     }
 }

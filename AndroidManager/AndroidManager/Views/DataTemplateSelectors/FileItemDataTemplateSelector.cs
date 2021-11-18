@@ -1,6 +1,6 @@
-﻿using Microsoft.UI.Xaml;
+﻿using AndroidManager.Models;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using SharpAdbClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,13 +16,13 @@ namespace AndroidManager.Views
 
         protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
         {
-            FileStatistics file = (FileStatistics)item;
+            FileItem file = (FileItem)item;
             if (file == null)
             {
                 return null;
             }
 
-            if (file.FileMode.HasFlag(UnixFileMode.Directory))
+            if (file.IsDirectory)
             {
                 return FolderTemplate;
             }

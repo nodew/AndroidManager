@@ -45,9 +45,12 @@ namespace AndroidManager.Views
 
         private void DeviceList_ItemClick(object sender, ItemClickEventArgs e)
         {
-            DeviceData deviceData = (DeviceData)e.ClickedItem;
-            viewModel.SelectDeviceCommand.Execute(deviceData);
-            MainWindow.Current.NavigateToDeviceDetailPage(deviceData);
+            DeviceData device = (DeviceData)e.ClickedItem;
+            if (device.State.HasFlag(DeviceState.Online))
+            {
+                viewModel.SelectDeviceCommand.Execute(device);
+                MainWindow.Current.NavigateToDeviceDetailPage(device);
+            }
         }
 
         private async void AppBarButton_Click(object sender, RoutedEventArgs e)

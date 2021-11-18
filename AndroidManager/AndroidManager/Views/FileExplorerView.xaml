@@ -3,24 +3,36 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:AndroidManager.Views"
-    xmlns:adb="using:SharpAdbClient"
+    xmlns:model="using:AndroidManager.Models"
+    xmlns:converter="using:AndroidManager.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Page.Resources>
-        <DataTemplate x:Name="fileItemTemplate" x:DataType="adb:FileStatistics">
-            <StackPanel Orientation="Horizontal">
-                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xf000;" />
-                <TextBlock Margin="6 0 0 0" Text="{x:Bind Path}"></TextBlock>
-            </StackPanel>
-        </DataTemplate>
-        <DataTemplate x:Name="folderItemTemplate" x:DataType="adb:FileStatistics">
+        <converter:DateTimeOffsetConverter x:Key="dateTimeConverter" />
+        <converter:FileSizeConverter x:Key="fileSizeConverter" />
+        <DataTemplate x:Name="folderItemTemplate" x:DataType="model:FileItem">
             <StackPanel Orientation="Horizontal">
                 <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xe8b7;" />
-                <TextBlock Margin="6 0 0 0" Text="{x:Bind Path}"></TextBlock>
+                <TextBlock Margin="6 0 0 0" Text="{x:Bind Name}"></TextBlock>
             </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Name="fileItemTemplate" x:DataType="model:FileItem">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="100" />
+                    <ColumnDefinition Width="200" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" Orientation="Horizontal">
+                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xf000;" />
+                    <TextBlock Margin="6 0 0 0" Text="{x:Bind Name}"></TextBlock>
+                </StackPanel>
+                <TextBlock Grid.Column="1" HorizontalAlignment="Right" Text="{x:Bind Size, Converter={StaticResource fileSizeConverter}}"></TextBlock>
+                <TextBlock Grid.Column="2" HorizontalAlignment="Right" Text="{x:Bind Time, Converter={StaticResource dateTimeConverter}}"></TextBlock>
+            </Grid>
         </DataTemplate>
         <local:FileItemDataTemplateSelector x:Key="fileItemDataTemplateSelector" 
                                             FileTemplate="{StaticResource fileItemTemplate}"
@@ -29,15 +41,31 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0" Margin="24 0">
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
+            <CommandBar DefaultLabelPosition="Right" Background="Transparent" Margin="0 0 24 0">
+                <AppBarButton
+                    x:Name="uploadBtn"
+                    Background="Transparent"
+                    Icon="Upload" 
+                    Label="Upload"
+                    Command="{x:Bind viewModel.UploadFileCommand}" />
+                <AppBarButton
+                    Background="Transparent"
+                    Icon="Download" 
+                    Label="Download"
+                    Command="{x:Bind viewModel.DownloadFileCommand}" />
+            </CommandBar>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Margin="24 6" Orientation="Horizontal">
             <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xed25;" />
             <TextBlock Margin="6 0 0 0" Text="{x:Bind viewModel.CurrentFolder, Mode=OneWay}" />
         </StackPanel>
         <ListView
             x:Name="fileListView"
-            Grid.Row="1"
+            Grid.Row="2"
             IsItemClickEnabled="True"
             ItemsSource="{x:Bind viewModel.Files}"
             ItemTemplateSelector="{StaticResource fileItemDataTemplateSelector}"
