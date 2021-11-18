@@ -15,17 +15,17 @@ namespace AndroidManager.Converters
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             int size = (int)value;
-            if (size > GB)
+            if (size >= GB)
             {
                 return $"{size / GB} GB";
             }
             
-            if (size > MB)
+            if (size >= MB)
             {
                 return $"{size / MB} MB";
             }
 
-            if (size > KB)
+            if (size >= KB)
             {
                 return $"{size / KB} KB";
             }
