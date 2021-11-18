@@ -22,12 +22,12 @@ namespace AndroidManager.ViewModels
         public FileExplorerViewModel(AdbClient adbClient, DevicesViewModel devicesViewModel)
         {
             _adbClient = adbClient;
-            _device = devicesViewModel.CurrentSelectedDeivce;
+            _device = devicesViewModel.CurrentSelectedDevice;
             _parentFolder = new Stack<string>();
             _files = new ObservableCollection<FileItem>();
             _currentFolder = "/";
 
-            NavigateToFolderCommand = new RelayCommand<FileItem>(NavigateToFolder, IsDerectory);
+            NavigateToFolderCommand = new RelayCommand<FileItem>(NavigateToFolder, IsDirectory);
 
             LoadChildItems(_currentFolder);
         }
@@ -65,7 +65,9 @@ namespace AndroidManager.ViewModels
                 var files = items.Where(file => !file.IsDirectory)
                     .OrderBy(file => file.Name);
 
-                Files.Add(new FileItem { Name = "..", IsDirectory = true });
+                if (!IsRootDirectory()) {
+                    Files.Add(new FileItem { Name = "..", IsDirectory = true });
+                }
                 
                 foreach (var folder in folders)
                 {
@@ -77,7 +79,7 @@ namespace AndroidManager.ViewModels
                     Files.Add(file);
                 }
             }
-            catch (Exception ex)
+            catch (Exception _)
             {
 
             }
@@ -85,9 +87,12 @@ namespace AndroidManager.ViewModels
 
         private void NavigateToFolder(FileItem file)
         {
-            if (file.Name == ".." && !IsRootDirectory())
+            if (file.Name == "..")
             {
-                NavigateToUpperFolder();
+                if (!IsRootDirectory()) 
+                {
+                    NavigateToUpperFolder();
+                }
             }
             else
             {
@@ -103,7 +108,7 @@ namespace AndroidManager.ViewModels
             LoadChildItems(CurrentFolder);
         }
 
-        private bool IsDerectory(FileItem file)
+        private bool IsDirectory(FileItem file)
         {
             return file.IsDirectory;
         }

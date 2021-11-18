@@ -21,7 +21,7 @@ namespace AndroidManager.ViewModels
         public ProcessesViewModel(AdbClient adbClient, DevicesViewModel devicesViewModel)
         {
             _adbClient = adbClient;
-            _device = devicesViewModel.CurrentSelectedDeivce;
+            _device = devicesViewModel.CurrentSelectedDevice;
             _processes = new ObservableCollection<AndroidProcess>();
 
             RefreshProcessesCommand = new RelayCommand(RefreshProcesses);

@@ -17,7 +17,7 @@ namespace AndroidManager.ViewModels
     {
         private readonly ObservableCollection<DeviceData> _devices;
         private readonly AdbClient _adbClient;
-        private DeviceData _currentSelectedDeivce;
+        private DeviceData _currentSelectedDevice;
 
         private string _deviceHost;
         private string _devicePort;
@@ -28,7 +28,7 @@ namespace AndroidManager.ViewModels
             _adbClient = adbClient;
             _devices = new ObservableCollection<DeviceData>();
             _pageState = DevicesPageState.NoRunningServer;
-            _currentSelectedDeivce = null;
+            _currentSelectedDevice = null;
 
             RefreshConnectedDevicesCommand = new RelayCommand(RefreshConnectedDevices);
             ConnectToNewDeviceCommand = new RelayCommand(ConnectToNewDevice, CanConnectToNewDevice);
@@ -62,10 +62,10 @@ namespace AndroidManager.ViewModels
             set {  SetProperty(ref _pageState, value); }
         }
 
-        public DeviceData CurrentSelectedDeivce 
+        public DeviceData CurrentSelectedDevice 
         { 
-            get {  return _currentSelectedDeivce; }
-            set { SetProperty(ref _currentSelectedDeivce, value); }
+            get {  return _currentSelectedDevice; }
+            set { SetProperty(ref _currentSelectedDevice, value); }
         }
 
         public string DeviceHost { 
@@ -145,7 +145,7 @@ namespace AndroidManager.ViewModels
 
         private void SelectDevice(DeviceData device)
         {
-            CurrentSelectedDeivce = device;
+            CurrentSelectedDevice = device;
         }
 
         private void ClearInput()
