@@ -36,6 +36,7 @@
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.20348.19" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.7" />
     <PackageReference Include="sharpadbclient" Version="2.3.23" />
+    <PackageReference Include="Vanara.PInvoke.User32" Version="3.3.14" />
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
 

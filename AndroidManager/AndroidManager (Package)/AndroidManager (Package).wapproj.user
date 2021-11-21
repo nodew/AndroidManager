@@ -4,4 +4,14 @@
     <DebuggerFlavor>AppHostLocalDebugger</DebuggerFlavor>
     <RemoteDebugEnabled>False</RemoteDebugEnabled>
   </PropertyGroup>
+  <PropertyGroup>
+    <Source>C:\Users\wangq\source\repos\AndroidManager\AndroidManager\AndroidManager %28Package%29\Images\app-icon-400.png</Source>
+    <SmallTileSource>C:\Users\wangq\source\repos\AndroidManager\AndroidManager\AndroidManager %28Package%29\Images\app-icon-400.png</SmallTileSource>
+    <MediumTileSource>C:\Users\wangq\source\repos\AndroidManager\AndroidManager\AndroidManager %28Package%29\Images\app-icon-400.png</MediumTileSource>
+    <WideTileSource>C:\Users\wangq\source\repos\AndroidManager\AndroidManager\AndroidManager %28Package%29\Images\app-icon-400.png</WideTileSource>
+    <LargeTileSource>C:\Users\wangq\source\repos\AndroidManager\AndroidManager\AndroidManager %28Package%29\Images\app-icon-400.png</LargeTileSource>
+    <AppIconSource>C:\Users\wangq\source\repos\AndroidManager\AndroidManager\AndroidManager %28Package%29\Images\app-icon-400.png</AppIconSource>
+    <SplashScreenSource>C:\Users\wangq\source\repos\AndroidManager\AndroidManager\AndroidManager %28Package%29\Images\app-icon-400.png</SplashScreenSource>
+    <PackageLogoSource>C:\Users\wangq\source\repos\AndroidManager\AndroidManager\AndroidManager %28Package%29\Images\app-icon-400.png</PackageLogoSource>
+  </PropertyGroup>
 </Project>

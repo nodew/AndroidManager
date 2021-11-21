@@ -21,20 +21,22 @@
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
         <DataTemplate x:Name="deviceListTemplate" x:DataType="vm:DevicesViewModel">
-            <ListView
-                x:Name="deviceListView"
+            <GridView
+                x:Name="deviceItemsView"
                 IsItemClickEnabled="True"
                 ItemClick="DeviceList_ItemClick"
                 ItemsSource="{x:Bind Devices}"
                 ItemTemplate="{StaticResource deviceCardTemplate}"
                 HorizontalContentAlignment="Stretch"
+                Margin="12 0 0 0"
                 SelectionMode="Single" >
-                <ListView.ItemContainerStyle>
-                    <Style TargetType="ListViewItem">
-                        <Setter Property="Margin" Value="0 0 0 12"/>
+                <GridView.ItemContainerStyle>
+                    <Style TargetType="GridViewItem">
+                        <Setter Property="Margin" Value="12 12"/>
+                        <Setter Property="Background" Value="#e2e2e2" />
                     </Style>
-                </ListView.ItemContainerStyle>
-            </ListView>
+                </GridView.ItemContainerStyle>
+            </GridView>
         </DataTemplate>
         <DataTemplate x:Name="noRunningAdbServerTemplate">
             <Grid>
@@ -47,56 +49,78 @@
             </Grid>
         </DataTemplate>
         <DataTemplate x:Name="deviceCardTemplate" x:DataType="adb:DeviceData" >
-            <StackPanel Padding="12" Orientation="Vertical">
-                <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
-                    <TextBlock Text="Name:" Width="60"></TextBlock>
-                    <TextBlock Text="{x:Bind Name}"></TextBlock>
+            <Grid Width="400" Height="180">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="120" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0">
+                    <Image Source="\Assets\android-os-100.png" Width="80" Height="80" />
+                </Grid>
+                <StackPanel Padding="12" Orientation="Vertical" VerticalAlignment="Center" Grid.Column="1">
+                    <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
+                        <TextBlock Text="Name:" Width="60"></TextBlock>
+                        <TextBlock Text="{x:Bind Name}"></TextBlock>
+                    </StackPanel>
+                    <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
+                        <TextBlock Text="Model:" Width="60"></TextBlock>
+                        <TextBlock Text="{x:Bind Model}"></TextBlock>
+                    </StackPanel>
+                    <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
+                        <TextBlock Text="Serial:" Width="60"></TextBlock>
+                        <TextBlock Text="{x:Bind Serial}"></TextBlock>
+                    </StackPanel>
+                    <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
+                        <TextBlock Text="State:" Width="60"></TextBlock>
+                        <TextBlock Text="{x:Bind State}"></TextBlock>
+                    </StackPanel>
                 </StackPanel>
-                <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
-                    <TextBlock Text="Model:" Width="60"></TextBlock>
-                    <TextBlock Text="{x:Bind Model}"></TextBlock>
-                </StackPanel>
-                <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
-                    <TextBlock Text="Serial:" Width="60"></TextBlock>
-                    <TextBlock Text="{x:Bind Serial}"></TextBlock>
-                </StackPanel>
-                <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
-                    <TextBlock Text="State:" Width="60"></TextBlock>
-                    <TextBlock Text="{x:Bind State}"></TextBlock>
-                </StackPanel>
-            </StackPanel>
+            </Grid>
         </DataTemplate>
         <ControlTemplate x:Name="contentControlTemplate" TargetType="ContentControl">
             <Grid>
-                <ContentPresenter Margin="24 24"></ContentPresenter>
+                <ContentPresenter></ContentPresenter>
             </Grid>
         </ControlTemplate>
         <converters:DevicesPageStateConverter x:Key="devicesPageStateConverter" />
     </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="320" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
-            <CommandBar DefaultLabelPosition="Right" Background="Transparent" Margin="0 0 24 0">
+        <StackPanel Grid.Row="0" HorizontalAlignment="Stretch" Height="320" >
+            <Image Source="/Assets/banner.jpg" />
+        </StackPanel>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+            <CommandBar Grid.Column="0" DefaultLabelPosition="Right" HorizontalAlignment="Left" Background="Transparent" Margin="0 0 24 0">
                 <AppBarButton
                     x:Name="addDeviceButton"
                     Background="Transparent"
                     Icon="Add" 
-                    Label="Add"
-                    Visibility="Visible"
+                    Label="Connect"
                     Click="AppBarButton_Click" />
+            </CommandBar>
+            <CommandBar Grid.Column="1" DefaultLabelPosition="Right" Background="Transparent" Margin="0 0 24 0">
                 <AppBarButton
                     Background="Transparent"
                     Icon="Refresh" 
                     Label="Refresh"
                     Command="{x:Bind viewModel.RefreshConnectedDevicesCommand}" />
+                <AppBarButton
+                    Background="Transparent"
+                    Icon="Setting" 
+                    Label="Setting" />
             </CommandBar>
-        </StackPanel>
+        </Grid>
         <ContentControl
             x:Name="content"
-            Grid.Row="1"
+            Grid.Row="2"
             Content="{x:Bind viewModel}"
             Template="{StaticResource contentControlTemplate}"
             ContentTemplate="{StaticResource noDeviceTemplate}">
@@ -142,7 +166,7 @@
         <ContentDialog 
             x:Name="addNewDeviceDialog"
             PrimaryButtonText="Connect"
-            Title="Add device"
+            Title="Add connection"
             CloseButtonText="Cancel">
             <StackPanel>
                 <TextBox x:Name="deviceHostTextBox" Header="Host" Text="{x:Bind viewModel.DeviceHost, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
@@ -152,7 +176,7 @@
         <ContentDialog 
             x:Name="failedToAddNewDeviceDialog"
             PrimaryButtonText="Confirm"
-            Title="Failed to connect device"
+            Title="Failed to connect the device"
             CloseButtonText="Cancel">
             <StackPanel>
                 <TextBlock x:Name="errorMessage" />
