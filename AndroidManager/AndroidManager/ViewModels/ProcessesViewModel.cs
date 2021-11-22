@@ -1,4 +1,6 @@
-﻿using Microsoft.Toolkit.Mvvm.Input;
+﻿using AndroidManager.Models;
+using Microsoft.Toolkit.Mvvm.Input;
+using Microsoft.Toolkit.Mvvm.Messaging;
 using SharpAdbClient;
 using SharpAdbClient.DeviceCommands;
 using System;
@@ -17,19 +19,23 @@ namespace AndroidManager.ViewModels
         private DeviceData _device;
 
         private ObservableCollection<AndroidProcess> _processes;
+        private List<AndroidProcess> _originalOrderedProcesses;
 
         public ProcessesViewModel(AdbClient adbClient, DevicesViewModel devicesViewModel)
         {
             _adbClient = adbClient;
             _device = devicesViewModel.CurrentSelectedDevice;
             _processes = new ObservableCollection<AndroidProcess>();
+            _originalOrderedProcesses = new List<AndroidProcess>();
 
             RefreshProcessesCommand = new RelayCommand(RefreshProcesses);
+            ReOrderProcessesCommand = new RelayCommand<OrderProcessArg>(ReOrderProcesses);
 
             LoadProcesses();
         }
 
         public ICommand RefreshProcessesCommand;
+        public ICommand ReOrderProcessesCommand;
 
         public ObservableCollection<AndroidProcess> Processes
         {
@@ -44,11 +50,45 @@ namespace AndroidManager.ViewModels
             {
                 Processes.Add(process);
             }
+
+            _originalOrderedProcesses = Processes.ToList();
+            WeakReferenceMessenger.Default.Send(new ProcessesRefreshed());
         }
 
         private void RefreshProcesses()
         {
             LoadProcesses();
+        }
+
+        private void ReOrderProcesses(OrderProcessArg arg)
+        {
+            var propertyInfo = typeof(AndroidProcess).GetProperty(arg.OrderBy);
+            IEnumerable<AndroidProcess> items;
+            if (propertyInfo == null)
+            {
+                items = _originalOrderedProcesses;
+            }
+            else
+            {
+                if (arg.Order == OrderType.Ascending)
+                {
+                    items = _originalOrderedProcesses.OrderBy(x => propertyInfo.GetValue(x, null));
+                }
+                else if (arg.Order == OrderType.Descending)
+                {
+                    items = _originalOrderedProcesses.OrderByDescending(x => propertyInfo.GetValue(x, null));
+                }
+                else
+                {
+                    items = _originalOrderedProcesses;
+                }
+            }
+
+            Processes.Clear();
+            foreach (var item in items)
+            {
+                Processes.Add(item);
+            }
         }
     }
 }

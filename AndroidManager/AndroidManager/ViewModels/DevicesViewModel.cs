@@ -86,6 +86,11 @@ namespace AndroidManager.ViewModels
                 var devices = _adbClient.GetDevices();
                 foreach (var device in devices)
                 {
+                    if (string.IsNullOrEmpty(device.Name))
+                    {
+                        device.Name = "Unknown";
+                    }
+
                     Devices.Add(device);
                 }
 

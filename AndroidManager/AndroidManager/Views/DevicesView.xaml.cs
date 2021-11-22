@@ -53,7 +53,7 @@ namespace AndroidManager.Views
             }
         }
 
-        private async void AppBarButton_Click(object sender, RoutedEventArgs e)
+        private async void ConnectToNewDevice(object sender, RoutedEventArgs e)
         {
             ContentDialogResult result = await addNewDeviceDialog.ShowAsync();
             if (result == ContentDialogResult.Primary)

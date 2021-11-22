@@ -1,5 +1,8 @@
-﻿using AndroidManager.ViewModels;
+﻿using AndroidManager.Models;
+using AndroidManager.ViewModels;
+using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -7,8 +10,10 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using SharpAdbClient.DeviceCommands;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -31,6 +36,52 @@ namespace AndroidManager.Views
         {
             viewModel = App.Current.Services.GetService<ProcessesViewModel>();
             this.InitializeComponent();
+            WeakReferenceMessenger.Default.Register<ProcessesRefreshed>(this, HandleProcessesRefreshed);
+        }
+
+        private void ProcessDataGrid_Sorting(object sender, DataGridColumnEventArgs e)
+        {
+            var selectedColumn = e.Column;
+            var selectedTag = selectedColumn.Tag.ToString();
+            OrderType orderType = OrderType.None;
+
+            if (selectedColumn.SortDirection == null)
+            {
+                orderType = OrderType.Ascending;
+                selectedColumn.SortDirection = DataGridSortDirection.Ascending;
+            }
+            else if (selectedColumn.SortDirection == DataGridSortDirection.Ascending)
+            {
+                orderType = OrderType.Descending;
+                selectedColumn.SortDirection = DataGridSortDirection.Descending;
+            }
+            else
+            {
+                selectedColumn.SortDirection = null;
+            }
+
+            foreach (var dgColumn in processDataGrid.Columns)
+            {
+                if (dgColumn.Tag.ToString() != selectedTag)
+                {
+                    dgColumn.SortDirection = null;
+                }
+            }
+            
+            viewModel.ReOrderProcessesCommand.Execute(new OrderProcessArg { Order = orderType, OrderBy = selectedTag });
+        }
+
+        private void HandleProcessesRefreshed(object recipient, ProcessesRefreshed e)
+        {
+            CleanupColumnSorting();
+        }
+
+        private void CleanupColumnSorting()
+        {
+            foreach (var dgColumn in processDataGrid.Columns)
+            {
+                dgColumn.SortDirection = null;
+            }
         }
     }
 }
