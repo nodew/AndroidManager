@@ -9,18 +9,10 @@
     <RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
     <UseWinUI>true</UseWinUI>
   </PropertyGroup>
-  <ItemGroup>
-    <Content Remove="Assets\Icons\box.svg" />
-    <Content Remove="Assets\Icons\copy.svg" />
-    <Content Remove="Assets\Icons\download.svg" />
-    <Content Remove="Assets\Icons\folder.svg" />
-    <Content Remove="Assets\Icons\layers.svg" />
-    <Content Remove="Assets\Icons\settings.svg" />
-    <Content Remove="Assets\Icons\smartphone.svg" />
-    <Content Remove="Assets\Icons\upload.svg" />
-  </ItemGroup>
+
   <ItemGroup>
     <None Remove="Resources\Common.xaml" />
+    <None Remove="Resources\Theme.xaml" />
     <None Remove="Views\DeviceDetailLandingView.xaml" />
     <None Remove="Views\DevicesView.xaml" />
     <None Remove="Views\FileExplorerView.xaml" />
@@ -42,52 +34,38 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\" />
     <Folder Include="Assets\" />
   </ItemGroup>
 
   <ItemGroup>
+      <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en-US\Resources.resw" />
+      <PRIResource Include="$(MSBuildThisFileDirectory)Strings\zh-CN\Resources.resw" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\DeviceDetailLandingView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\DevicesView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\FileExplorerView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\PackagesView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\ProcessesView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Views\SettingsView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Views\FileExplorerView.xaml">
+    <Page Update="Resources\Theme.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Page Update="Views\ProcessesView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Page Update="Views\PackagesView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Page Update="Views\DevicesView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-
-  <ItemGroup>
-    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en-US\Resources.resw" />
-    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\zh-CN\Resources.resw" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Page Update="Views\DeviceDetailLandingView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-
-  <ItemGroup>
     <Page Update="Styles\Common.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

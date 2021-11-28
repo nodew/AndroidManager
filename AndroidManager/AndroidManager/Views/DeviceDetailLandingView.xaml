@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="{ThemeResource SystemChromeAltMediumHighColor}">
 
     <NavigationView 
         x:Name="deviceDetailNav" 
@@ -15,9 +15,10 @@
         IsBackEnabled="True"
         BackRequested="DeviceDetailNav_BackRequested"
         Loaded="DeviceDetailNav_Loaded"
-        SelectionChanged="DeviceDetailNav_SelectionChanged">
+        SelectionChanged="DeviceDetailNav_SelectionChanged" >
         <NavigationView.MenuItems>
             <NavigationViewItem  
+                x:Uid="DevicesLandingPageNavPackages"
                 Content="Packages" 
                 Tag="Packages" >
                 <NavigationViewItem.Icon>
@@ -25,13 +26,15 @@
                 </NavigationViewItem.Icon>
             </NavigationViewItem>
             <NavigationViewItem  
-                Content="Android processes"
+                x:Uid="DevicesLandingPageNavProcesses"
+                Content="Processes"
                 Tag="Processes">
                 <NavigationViewItem.Icon>
                     <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xF22C;" />
                 </NavigationViewItem.Icon>
             </NavigationViewItem>
             <NavigationViewItem  
+                x:Uid="DevicesLandingPageNavFileExplorer"
                 Content="File Explorer"
                 Tag="FileExplorer" >
                 <NavigationViewItem.Icon>

@@ -117,22 +117,124 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="DevicesPageTitle.Text" xml:space="preserve">
-    <value>Devices</value>
+  <data name="AppName" xml:space="preserve">
+    <value>Android manager</value>
   </data>
-  <data name="SideNavDevices" xml:space="preserve">
-    <value>Devices</value>
+  <data name="DevicesLandingPageNavFileExplorer.Content" xml:space="preserve">
+    <value>File explorer</value>
   </data>
-  <data name="SideNavFileExplorer" xml:space="preserve">
-    <value>Explorer</value>
-  </data>
-  <data name="SideNavPackages" xml:space="preserve">
+  <data name="DevicesLandingPageNavPackages.Content" xml:space="preserve">
     <value>Packages</value>
   </data>
-  <data name="SideNavServices" xml:space="preserve">
-    <value>Services</value>
+  <data name="DevicesLandingPageNavProcesses.Content" xml:space="preserve">
+    <value>Processes</value>
   </data>
-  <data name="SideNavSettings" xml:space="preserve">
+  <data name="DevicesPageAddConnectionButton.Content" xml:space="preserve">
+    <value>Add connection</value>
+  </data>
+  <data name="DevicesPageAddDeviceDialog.CloseButtonText" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="DevicesPageAddDeviceDialog.PrimaryButtonText" xml:space="preserve">
+    <value>Connect</value>
+  </data>
+  <data name="DevicesPageAddDeviceDialog.Title" xml:space="preserve">
+    <value>Add new connection</value>
+  </data>
+  <data name="DevicesPageConnectButton.Label" xml:space="preserve">
+    <value>Connect</value>
+  </data>
+  <data name="DevicesPageConnectedDevice.Text" xml:space="preserve">
+    <value>Connected devices</value>
+  </data>
+  <data name="DevicesPageConnectFailedDialogTitle" xml:space="preserve">
+    <value>Failed to connect the device</value>
+  </data>
+  <data name="DevicesPageFailureDialog.CloseButtonText" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="DevicesPageFailureDialog.PrimaryButtonText" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
+  <data name="DevicesPageHost.Header" xml:space="preserve">
+    <value>Host</value>
+  </data>
+  <data name="DevicesPageInvalidAdbExe" xml:space="preserve">
+    <value>Invalid adb.exe</value>
+  </data>
+  <data name="DevicesPageInvalidHostMessage" xml:space="preserve">
+    <value>Host can't be empty</value>
+  </data>
+  <data name="DevicesPageInvalidPortMessage" xml:space="preserve">
+    <value>Invalid port</value>
+  </data>
+  <data name="DevicesPageNoAdbServerHint.Text" xml:space="preserve">
+    <value>There's no running adb server, try to start server</value>
+  </data>
+  <data name="DevicesPageNoDevicesHint.Text" xml:space="preserve">
+    <value>There's no connected device, please add one to continue</value>
+  </data>
+  <data name="DevicesPagePort.Header" xml:space="preserve">
+    <value>Port</value>
+  </data>
+  <data name="DevicesPageRereshButton.Label" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="DevicesPageSettingButton.Label" xml:space="preserve">
+    <value>Setting</value>
+  </data>
+  <data name="DevicesPageStartAdbButton.Content" xml:space="preserve">
+    <value>Start adb server</value>
+  </data>
+  <data name="DevicesPageStartAdbServerDialogTitle" xml:space="preserve">
+    <value>Failed to start adb server</value>
+  </data>
+  <data name="DevicesPageStartAdbServerUnknownError" xml:space="preserve">
+    <value>Unknown error, please run adb server by yourself</value>
+  </data>
+  <data name="FileExplorerPageDownloadButton.Label" xml:space="preserve">
+    <value>Download</value>
+  </data>
+  <data name="FileExplorerPageUploadButton.Label" xml:space="preserve">
+    <value>Upload</value>
+  </data>
+  <data name="PackagePageInstallPakcageButton.Label" xml:space="preserve">
+    <value>Install new package</value>
+  </data>
+  <data name="RefreshAppBarButton.Label" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="Setting" xml:space="preserve">
+    <value>Setting</value>
+  </data>
+  <data name="SettingsPageAdbPath.PlaceholderText" xml:space="preserve">
+    <value>Leave it to empty to use default adb in path</value>
+  </data>
+  <data name="SettingsPageAdbPathHeader.Text" xml:space="preserve">
+    <value>Adb path</value>
+  </data>
+  <data name="SettingsPageLangDefault.Content" xml:space="preserve">
+    <value>Default language</value>
+  </data>
+  <data name="SettingsPageLanguageHeader.Text" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="SettingsPageSaveButton.Content" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="SettingsPageThemeDark.Content" xml:space="preserve">
+    <value>Dark theme</value>
+  </data>
+  <data name="SettingsPageThemeDefault.Content" xml:space="preserve">
+    <value>Follow system theme</value>
+  </data>
+  <data name="SettingsPageThemeHeader.Text" xml:space="preserve">
+    <value>Theme</value>
+  </data>
+  <data name="SettingsPageThemeLight.Content" xml:space="preserve">
+    <value>Light theme</value>
+  </data>
+  <data name="SettingsPageTitle.Header" xml:space="preserve">
     <value>Setting</value>
   </data>
 </root>

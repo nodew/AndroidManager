@@ -1,4 +1,5 @@
 ﻿using AndroidManager.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -24,9 +25,38 @@ namespace AndroidManager.Views
     /// </summary>
     public sealed partial class SettingsView : Page
     {
+        public SettingsViewModel viewModel;
         public SettingsView()
         {
+            viewModel = App.Current.Services.GetService<SettingsViewModel>();
             this.InitializeComponent();
+        }
+
+        private void BackToMainPage(object sender, NavigationViewBackRequestedEventArgs args)
+        {
+            MainWindow.Current.NavigateToDevicesView();
+        }
+
+        private void LanguageSettingRadioGroup_Loaded(object sender, RoutedEventArgs e)
+        {
+            PreSelectedItem(languageSettingRadioGroup, viewModel.SelectedLanguage);
+        }
+
+        private void ThemeSettingRadioGroup_Loaded(object sender, RoutedEventArgs e)
+        {
+            PreSelectedItem(themeSettingRadioGroup, viewModel.SelectedTheme);
+        }
+
+        private static void PreSelectedItem(RadioButtons group, string selectedKey)
+        {
+            var options = group.Items;
+            var option = options[0];
+            var selectedItems = options.Where(item => ((RadioButton)item).Tag.ToString() == selectedKey);
+            if (selectedItems.Any())
+            {
+                option = selectedItems.First();
+            }
+            ((RadioButton)option).IsChecked = true;
         }
     }
 }

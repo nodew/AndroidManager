@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace AndroidManager.Models
 {
-    public class FailedToAddDeviceEvent
+    public class FailedToStartAdbServerEvent
     {
-        public FailedToAddDeviceEvent(string message)
+        public FailedToStartAdbServerEvent(string message)
         {
             ErrorMessage = message;
         }

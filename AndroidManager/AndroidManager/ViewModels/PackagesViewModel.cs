@@ -18,6 +18,7 @@ namespace AndroidManager.ViewModels
     {
         private PackageManager _packageManager;
         private ObservableCollection<Package> _packages;
+        private bool _installing;
 
         public PackagesViewModel(AdbClient adbClient, DevicesViewModel devicesViweModel)
         {
@@ -37,6 +38,12 @@ namespace AndroidManager.ViewModels
         public ObservableCollection<Package> Packages
         {
             get { return _packages; }
+        }
+
+        public bool Installing
+        {
+            get { return _installing; }
+            set { SetProperty(ref _installing, value); }
         }
 
         private void LoadPackages()
@@ -60,6 +67,7 @@ namespace AndroidManager.ViewModels
 
         private void InstallNewPackage(string filepath)
         {
+            Installing = true;
             MainWindow.Current.DispatcherQueue.TryEnqueue(DispatcherQueuePriority.Normal, async () =>
             {
                 try
@@ -71,6 +79,10 @@ namespace AndroidManager.ViewModels
                 catch (PackageInstallationException ex)
                 {
                     WeakReferenceMessenger.Default.Send(ex);
+                } 
+                finally
+                {
+                    Installing = false;
                 }
             });
             

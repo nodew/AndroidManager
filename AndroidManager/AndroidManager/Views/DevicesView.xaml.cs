@@ -18,6 +18,7 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using System.Threading.Tasks;
 using SharpAdbClient;
+using Windows.ApplicationModel.Resources;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -29,18 +30,16 @@ namespace AndroidManager.Views
     /// </summary>
     public sealed partial class DevicesView : Page
     {
-        private DevicesViewModel viewModel;
+        private readonly DevicesViewModel viewModel;
+        private readonly ResourceLoader resourceLoader;
 
         public DevicesView()
         {
             viewModel = App.Current.Services.GetService<DevicesViewModel>();
+            resourceLoader = new ResourceLoader();
             this.InitializeComponent();
-            WeakReferenceMessenger.Default.Register<FailedToAddDeviceEvent>(this, async (o, e) =>
-            {
-                ClearInputBox();
-                errorMessage.Text = e.ErrorMessage;
-                await failedToAddNewDeviceDialog.ShowAsync();
-            });
+            WeakReferenceMessenger.Default.Register<FailedToAddDeviceEvent>(this, HandleFailedToAddDeviceEvent);
+            WeakReferenceMessenger.Default.Register<FailedToStartAdbServerEvent>(this, HandleFailedToStartAdbServer);
         }
 
         private void DeviceList_ItemClick(object sender, ItemClickEventArgs e)
@@ -69,8 +68,28 @@ namespace AndroidManager.Views
 
         private void ClearInputBox()
         {
-            deviceHostTextBox.Text = String.Empty;
-            devicePortTextBox.Text = String.Empty;
+            deviceHostTextBox.Text = string.Empty;
+            devicePortTextBox.Text = string.Empty;
+        }
+
+        private void GotoSettingsPage(object sender, RoutedEventArgs e)
+        {
+            MainWindow.Current.NavigateToSettingsPage();
+        }
+
+        private async void HandleFailedToAddDeviceEvent(object sender, FailedToAddDeviceEvent e)
+        {
+            ClearInputBox();
+            errorMessage.Text = e.ErrorMessage;
+            failureDialog.Title = resourceLoader.GetString("DevicesPageConnectFailedDialogTitle");
+            await failureDialog.ShowAsync();
+        }
+
+        private async void HandleFailedToStartAdbServer(object sender, FailedToStartAdbServerEvent e)
+        {
+            errorMessage.Text = e.ErrorMessage;
+            failureDialog.Title = resourceLoader.GetString("DevicesPageStartAdbServerDialogTitle");
+            await failureDialog.ShowAsync();
         }
     }
 }

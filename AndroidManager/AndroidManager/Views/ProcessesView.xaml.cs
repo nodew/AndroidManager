@@ -30,7 +30,7 @@ namespace AndroidManager.Views
     /// </summary>
     public sealed partial class ProcessesView : Page
     {
-        private ProcessesViewModel viewModel;
+        private readonly ProcessesViewModel viewModel;
 
         public ProcessesView()
         {

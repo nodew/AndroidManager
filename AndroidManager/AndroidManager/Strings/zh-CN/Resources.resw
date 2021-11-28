@@ -117,22 +117,124 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="DevicesPageTitle.Text" xml:space="preserve">
-    <value>设备</value>
+  <data name="AppName" xml:space="preserve">
+    <value>安卓管理器</value>
   </data>
-  <data name="SideNavDevices" xml:space="preserve">
-    <value>设备</value>
+  <data name="DevicesLandingPageNavFileExplorer.Content" xml:space="preserve">
+    <value>文件浏览</value>
   </data>
-  <data name="SideNavFileExplorer" xml:space="preserve">
-    <value>文件</value>
+  <data name="DevicesLandingPageNavPackages.Content" xml:space="preserve">
+    <value>程序包管理</value>
   </data>
-  <data name="SideNavPackages" xml:space="preserve">
-    <value>安装包</value>
+  <data name="DevicesLandingPageNavProcesses.Content" xml:space="preserve">
+    <value>进程管理</value>
   </data>
-  <data name="SideNavServices" xml:space="preserve">
-    <value>服务</value>
+  <data name="DevicesPageAddConnectionButton.Content" xml:space="preserve">
+    <value>添加设备</value>
   </data>
-  <data name="SideNavSettings" xml:space="preserve">
+  <data name="DevicesPageAddDeviceDialog.CloseButtonText" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="DevicesPageAddDeviceDialog.PrimaryButtonText" xml:space="preserve">
+    <value>连接</value>
+  </data>
+  <data name="DevicesPageAddDeviceDialog.Title" xml:space="preserve">
+    <value>连接新的设备</value>
+  </data>
+  <data name="DevicesPageConnectButton.Label" xml:space="preserve">
+    <value>连接</value>
+  </data>
+  <data name="DevicesPageConnectedDevice.Text" xml:space="preserve">
+    <value>已连接的设备</value>
+  </data>
+  <data name="DevicesPageConnectFailedDialogTitle" xml:space="preserve">
+    <value>无法连接到设备</value>
+  </data>
+  <data name="DevicesPageFailureDialog.CloseButtonText" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="DevicesPageFailureDialog.PrimaryButtonText" xml:space="preserve">
+    <value>确认</value>
+  </data>
+  <data name="DevicesPageHost.Header" xml:space="preserve">
+    <value>主机 IP</value>
+  </data>
+  <data name="DevicesPageInvalidAdbExe" xml:space="preserve">
+    <value>不能找到 adb.exe</value>
+  </data>
+  <data name="DevicesPageInvalidHostMessage" xml:space="preserve">
+    <value>主机 IP 不能为空</value>
+  </data>
+  <data name="DevicesPageInvalidPortMessage" xml:space="preserve">
+    <value>无效的端口号</value>
+  </data>
+  <data name="DevicesPageNoAdbServerHint.Text" xml:space="preserve">
+    <value>没有检测到正在运行的 adb 服务，请启动 adb 服务</value>
+  </data>
+  <data name="DevicesPageNoDevicesHint.Text" xml:space="preserve">
+    <value>当前未连接任何设备，请添加一个设备以继续使用</value>
+  </data>
+  <data name="DevicesPagePort.Header" xml:space="preserve">
+    <value>端口</value>
+  </data>
+  <data name="DevicesPageRereshButton.Label" xml:space="preserve">
+    <value>刷新</value>
+  </data>
+  <data name="DevicesPageSettingButton.Label" xml:space="preserve">
+    <value>设置</value>
+  </data>
+  <data name="DevicesPageStartAdbButton.Content" xml:space="preserve">
+    <value>启动 adb 服务</value>
+  </data>
+  <data name="DevicesPageStartAdbServerDialogTitle" xml:space="preserve">
+    <value>启动 adb 服务失败</value>
+  </data>
+  <data name="DevicesPageStartAdbServerUnknownError" xml:space="preserve">
+    <value>未知错误，请尝试自行启用 adb 服务</value>
+  </data>
+  <data name="FileExplorerPageDownloadButton.Label" xml:space="preserve">
+    <value>下载</value>
+  </data>
+  <data name="FileExplorerPageUploadButton.Label" xml:space="preserve">
+    <value>上传</value>
+  </data>
+  <data name="PackagePageInstallPakcageButton.Label" xml:space="preserve">
+    <value>安装 APK 包</value>
+  </data>
+  <data name="RefreshAppBarButton.Label" xml:space="preserve">
+    <value>刷新</value>
+  </data>
+  <data name="Setting" xml:space="preserve">
+    <value>设置</value>
+  </data>
+  <data name="SettingsPageAdbPath.PlaceholderText" xml:space="preserve">
+    <value>路径为空则使用系统默认 adb.exe</value>
+  </data>
+  <data name="SettingsPageAdbPathHeader.Text" xml:space="preserve">
+    <value>Adb 安装路径</value>
+  </data>
+  <data name="SettingsPageLangDefault.Content" xml:space="preserve">
+    <value>默认语言</value>
+  </data>
+  <data name="SettingsPageLanguageHeader.Text" xml:space="preserve">
+    <value>语言</value>
+  </data>
+  <data name="SettingsPageSaveButton.Content" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="SettingsPageThemeDark.Content" xml:space="preserve">
+    <value>深色主题</value>
+  </data>
+  <data name="SettingsPageThemeDefault.Content" xml:space="preserve">
+    <value>系统主题</value>
+  </data>
+  <data name="SettingsPageThemeHeader.Text" xml:space="preserve">
+    <value>主题</value>
+  </data>
+  <data name="SettingsPageThemeLight.Content" xml:space="preserve">
+    <value>浅色主题</value>
+  </data>
+  <data name="SettingsPageTitle.Header" xml:space="preserve">
     <value>设置</value>
   </data>
 </root>

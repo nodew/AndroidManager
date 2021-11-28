@@ -8,8 +8,7 @@
     xmlns:adb="using:SharpAdbClient.DeviceCommands"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    mc:Ignorable="d">
 
     <Page.Resources>
         <converter:AndroidProcessStateConverter x:Key="androidStateConverter" />
@@ -25,6 +24,7 @@
                 <AppBarButton
                     Background="Transparent"
                     Icon="Refresh" 
+                    x:Uid="RefreshAppBarButton"
                     Label="Refresh"
                     Command="{x:Bind viewModel.RefreshProcessesCommand}"/>
             </CommandBar>

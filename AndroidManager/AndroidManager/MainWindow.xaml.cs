@@ -1,26 +1,13 @@
-﻿using AndroidManager.Models;
-using AndroidManager.ViewModels;
+﻿using AndroidManager.Services;
 using AndroidManager.Views;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Toolkit.Mvvm.Messaging;
+using Microsoft.UI;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
 using SharpAdbClient;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel.Resources;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Vanara.PInvoke;
+using Windows.ApplicationModel.Resources.Core;
+using Windows.Globalization;
+using Windows.System.UserProfile;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -33,22 +20,20 @@ namespace AndroidManager
     public sealed partial class MainWindow : Window
     {
         private static MainWindow _instance;
-
         public new static MainWindow Current => _instance;
+        private readonly AppSettings _appSettings;
+        private readonly ResourceLoader resourceLoader;
 
-        private MainWindow()
+        public MainWindow()
         {
+            _appSettings = App.Current.Services.GetService<AppSettings>();
+            resourceLoader = new ResourceLoader();
+            this.Title = resourceLoader.GetString("AppName");
             this.InitializeComponent();
-            this.Title = "Android manager";
-        }
 
-        public static MainWindow GetInstance()
-        {
-            if (_instance == null)
-            {
-                _instance = new MainWindow();
-            }
-            return _instance;
+            ApplyLanguageSetting(_appSettings.Language);
+            ApplyThemeSetting(_appSettings.Theme);
+            _instance = this;
         }
 
         private void MainFrame_Loaded(object sender, RoutedEventArgs e)
@@ -69,6 +54,39 @@ namespace AndroidManager
         public void NavigateToSettingsPage()
         {
             mainFrame.Navigate(typeof(SettingsView));
+        }
+
+        public void ApplyLanguageSetting(string language)
+        {
+            ApplicationLanguages.PrimaryLanguageOverride =
+                !string.IsNullOrEmpty(language) ? language : GlobalizationPreferences.Languages[0];
+        }
+
+        public void ApplyThemeSetting(string theme)
+        {
+            if (theme == "dark")
+            {
+                mainFrame.RequestedTheme = ElementTheme.Dark;
+            }
+            else if (theme == "light")
+            {
+                mainFrame.RequestedTheme = ElementTheme.Light;
+            }
+            else
+            {
+                mainFrame.RequestedTheme = GetSystemTheme();
+            }
+        }
+
+        private static ElementTheme GetSystemTheme()
+        {
+            var uiSettings = new Windows.UI.ViewManagement.UISettings();
+            var color = uiSettings.GetColorValue(Windows.UI.ViewManagement.UIColorType.Background);
+            if (color == Colors.Black)
+            {
+                return ElementTheme.Dark;
+            }
+            return ElementTheme.Light;
         }
     }
 }

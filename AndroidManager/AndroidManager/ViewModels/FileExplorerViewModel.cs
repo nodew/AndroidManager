@@ -79,7 +79,7 @@ namespace AndroidManager.ViewModels
                     Files.Add(file);
                 }
             }
-            catch (Exception _)
+            catch (Exception)
             {
 
             }

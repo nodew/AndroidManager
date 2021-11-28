@@ -1,4 +1,4 @@
-﻿using AndroidManager.Models;
+﻿using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
 using System;
 using System.Collections.Generic;
@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace AndroidManager.Converters
 {
-    internal class DevicesPageStateConverter : IValueConverter
+    public class RadioButtonConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            DevicesPageState state = (DevicesPageState)value;
-            return state.ToString();
+            var item = (RadioButton)value;
+            return item?.Tag?.ToString() ?? string.Empty;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

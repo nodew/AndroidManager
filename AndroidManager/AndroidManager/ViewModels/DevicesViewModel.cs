@@ -1,15 +1,21 @@
 ﻿using AndroidManager.Models;
+using AndroidManager.Services;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
+using Microsoft.UI.Dispatching;
 using SharpAdbClient;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Windows.ApplicationModel.Resources;
 
 namespace AndroidManager.ViewModels
 {
@@ -17,27 +23,41 @@ namespace AndroidManager.ViewModels
     {
         private readonly ObservableCollection<DeviceData> _devices;
         private readonly AdbClient _adbClient;
-        private DeviceData _currentSelectedDevice;
+        private readonly IAdbService _adbService;
+        private readonly AppSettings _appSettings;
+        private readonly ResourceLoader resourceLoader;
 
+        private DeviceMonitor _monitor;
+        private DeviceData _currentSelectedDevice;
+        private bool _adbServerIsRunning;
+        private bool _noDevices;
         private string _deviceHost;
         private string _devicePort;
-        private DevicesPageState _pageState;
+        private string _adbPath;
 
-        public DevicesViewModel(AdbClient adbClient)
+        public DevicesViewModel(AdbClient adbClient, IAdbService adbService, AppSettings appSettings)
         {
             _adbClient = adbClient;
+            _adbService = adbService;
+            _appSettings = appSettings;
+
+            resourceLoader = new ResourceLoader();
             _devices = new ObservableCollection<DeviceData>();
-            _pageState = DevicesPageState.NoRunningServer;
+            _noDevices = true;
             _currentSelectedDevice = null;
 
             RefreshConnectedDevicesCommand = new RelayCommand(RefreshConnectedDevices);
             ConnectToNewDeviceCommand = new RelayCommand(ConnectToNewDevice, CanConnectToNewDevice);
             ClearInputCommand = new RelayCommand(ClearInput);
             SelectDeviceCommand = new RelayCommand<DeviceData>(SelectDevice);
-
-            if (AdbServer.Instance.GetStatus().IsRunning)
+            StartAdbServerCommand = new RelayCommand(StartAdbServer, CanStartAdbServer);
+            
+            SetupAdbPath();
+            UpdateAdbServerStatus();
+            
+            if (AdbServerIsRunning)
             {
-                LoadConnectedDevices();
+                SetupMonitor();
             }
         }
 
@@ -45,21 +65,23 @@ namespace AndroidManager.ViewModels
         public ICommand ConnectToNewDeviceCommand { get; }
         public ICommand ClearInputCommand { get; }
         public ICommand SelectDeviceCommand { get; }
+        public ICommand StartAdbServerCommand { get; }
 
         public ObservableCollection<DeviceData> Devices
         {
             get { return _devices; }
         }
 
-        public bool HasDevices
+        public bool NoDevices
         {
-            get { return _devices.Count > 0; }
+            get { return _noDevices; }
+            set { SetProperty(ref _noDevices, value); }
         }
 
-        public DevicesPageState PageState
+        public bool AdbServerIsRunning
         {
-            get { return _pageState; }
-            set {  SetProperty(ref _pageState, value); }
+            get { return _adbServerIsRunning; }
+            set { SetProperty(ref _adbServerIsRunning, value); }
         }
 
         public DeviceData CurrentSelectedDevice 
@@ -86,66 +108,111 @@ namespace AndroidManager.ViewModels
                 var devices = _adbClient.GetDevices();
                 foreach (var device in devices)
                 {
-                    if (string.IsNullOrEmpty(device.Name))
-                    {
-                        device.Name = "Unknown";
-                    }
-
-                    Devices.Add(device);
+                    AddDevice(device);
                 }
-
-                if (Devices.Count > 0)
-                {
-                    PageState = DevicesPageState.HasDevices;
-                }
-                else
-                {
-                    PageState = DevicesPageState.NoDevice;
-                }
+                NoDevices = devices.Count == 0;
             }
             catch (Exception)
             {
-                PageState = DevicesPageState.NoRunningServer;
+                AdbServerIsRunning = false;
+            }
+        }
+
+        private void SetupAdbPath()
+        {
+            if (string.IsNullOrEmpty(_appSettings.AdbPath))
+            {
+                _adbPath = _adbService.GetAdbExePath();
+            }
+            else
+            {
+                _adbPath = _appSettings.AdbPath;
+            }
+        }
+
+        private void SetupMonitor()
+        {
+            if (AdbServerIsRunning)
+            {
+                var socket = Factories.AdbSocketFactory(new IPEndPoint(IPAddress.Loopback, AdbClient.AdbServerPort));
+                _monitor = new DeviceMonitor(socket);
+                _monitor.DeviceConnected += OnDeviceListUpdated;
+                _monitor.DeviceDisconnected += OnDeviceListUpdated;
+                _monitor.DeviceChanged += OnDeviceListUpdated;
+                _monitor.Start();
             }
         }
 
         private void RefreshConnectedDevices()
         {
-            LoadConnectedDevices();
+            UpdateAdbServerStatus();
+            if (AdbServerIsRunning)
+            {
+                MainWindow.Current.DispatcherQueue.TryEnqueue(DispatcherQueuePriority.Normal, async () =>
+                {
+                    await Task.Delay(300);
+                    LoadConnectedDevices();
+                });
+            }
         }
 
         private void ConnectToNewDevice()
         {
             _adbClient.Connect(new DnsEndPoint(DeviceHost, int.Parse(DevicePort)));
-            
-            int currentDevicesCount = Devices.Count;
-            RefreshConnectedDevices();
-            if (Devices.Count == currentDevicesCount)
-            {
-                var errorMessage = $"Failed to connect to the device {DeviceHost}:{DevicePort}, please check your settings";
-                WeakReferenceMessenger.Default.Send(new FailedToAddDeviceEvent() { ErrorMessage = errorMessage });
-            } 
-            else
-            {
-                ClearInput();
-            }
+            ClearInput();
         }
 
         private bool CanConnectToNewDevice()
         {
             if (string.IsNullOrWhiteSpace(DeviceHost))
             {
-                var errorMessage = "Host can't be empty";
-                WeakReferenceMessenger.Default.Send(new FailedToAddDeviceEvent() { ErrorMessage = errorMessage });
+                var errorMessage = resourceLoader.GetString("DevicesPageInvalidHostMessage");
+                WeakReferenceMessenger.Default.Send(new FailedToAddDeviceEvent(errorMessage));
                 return false;
             }
             if (string.IsNullOrWhiteSpace(DevicePort) || !int.TryParse(DevicePort, out int _))
             {
-                var errorMessage = "Invalid port";
-                WeakReferenceMessenger.Default.Send(new FailedToAddDeviceEvent() { ErrorMessage = errorMessage });
+                var errorMessage = resourceLoader.GetString("DevicesPageInvalidPortMessage");
+                WeakReferenceMessenger.Default.Send(new FailedToAddDeviceEvent(errorMessage));
                 return false;
             }
             return true;
+        }
+
+        private void StartAdbServer()
+        {
+            if (string.IsNullOrEmpty(_adbPath) || !File.Exists(_adbPath))
+            {
+                WeakReferenceMessenger.Default.Send(new FailedToStartAdbServerEvent(resourceLoader.GetString("DevicesPageInvalidAdbExe")));
+                return;
+            }
+            MainWindow.Current.DispatcherQueue.TryEnqueue(DispatcherQueuePriority.Normal, async () =>
+            {
+                try
+                {
+                    await Task.Run(() => _adbService.StartAdbServer(_adbPath));
+                    await Task.Delay(300);
+                    UpdateAdbServerStatus();
+                    if (AdbServerIsRunning)
+                    {
+                        SetupMonitor();
+                        RefreshConnectedDevices();
+                    }
+                    else
+                    {
+                        WeakReferenceMessenger.Default.Send(new FailedToStartAdbServerEvent(resourceLoader.GetString("DevicesPageStartAdbServerUnknownError")));
+                    }
+                } 
+                catch (Exception ex)
+                {
+                    WeakReferenceMessenger.Default.Send(new FailedToStartAdbServerEvent(ex.Message));
+                }
+            });
+        }
+
+        private bool CanStartAdbServer()
+        {
+            return !AdbServerIsRunning;
         }
 
         private void SelectDevice(DeviceData device)
@@ -157,6 +224,27 @@ namespace AndroidManager.ViewModels
         {
             DeviceHost = string.Empty;
             DevicePort = string.Empty;
+        }
+
+        private void UpdateAdbServerStatus()
+        {
+            var status = AdbServer.Instance.GetStatus();
+            AdbServerIsRunning = status.IsRunning;
+        }
+
+        private void AddDevice(DeviceData device)
+        {
+            if (string.IsNullOrEmpty(device.Name))
+            {
+                device.Name = "Unknown";
+            }
+
+            Devices.Add(device);
+        }
+
+        private void OnDeviceListUpdated(object sender, DeviceDataEventArgs e)
+        {
+            RefreshConnectedDevices();
         }
     }
 }

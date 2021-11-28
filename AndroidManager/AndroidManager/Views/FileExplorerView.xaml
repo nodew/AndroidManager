@@ -7,8 +7,7 @@
     xmlns:converter="using:AndroidManager.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    mc:Ignorable="d">
 
     <Page.Resources>
         <converter:DateTimeOffsetConverter x:Key="dateTimeConverter" />
@@ -48,6 +47,7 @@
             <CommandBar DefaultLabelPosition="Right" Background="Transparent" Margin="0 0 24 0">
                 <AppBarButton
                     x:Name="uploadBtn"
+                    x:Uid="FileExplorerPageUploadButton"
                     Background="Transparent"
                     Icon="Upload" 
                     Label="Upload"
@@ -55,6 +55,7 @@
                 <AppBarButton
                     Background="Transparent"
                     Icon="Download" 
+                    x:Uid="FileExplorerPageDownloadButton"
                     Label="Download"
                     Command="{x:Bind viewModel.DownloadFileCommand}" />
             </CommandBar>

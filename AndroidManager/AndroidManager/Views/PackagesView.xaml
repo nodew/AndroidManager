@@ -6,8 +6,7 @@
     xmlns:model="using:AndroidManager.Models"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    mc:Ignorable="d">
 
     <Page.Resources>
         <DataTemplate x:Name="packageItemTemplate" x:DataType="model:Package">
@@ -20,12 +19,14 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
             <CommandBar DefaultLabelPosition="Right" Background="Transparent" Margin="0 0 24 0">
                 <AppBarButton
                     x:Name="installPackageButton"
+                    x:Uid="PackagePageInstallPakcageButton"
                     Background="Transparent"
                     Icon="Add" 
                     Label="Install new package"
@@ -33,13 +34,15 @@
                 <AppBarButton
                     Background="Transparent"
                     Icon="Refresh" 
+                    x:Uid="RefreshAppBarButton"
                     Label="Refresh"
                     Command="{x:Bind viewModel.RefreshPackagesCommand}"/>
             </CommandBar>
         </StackPanel>
+        <ProgressBar Grid.Row="1" IsIndeterminate="True" ShowPaused="False" ShowError="False" Visibility="{x:Bind viewModel.Installing, Mode=OneWay}" />
         <ListView
             x:Name="packageListView"
-            Grid.Row="1"
+            Grid.Row="2"
             IsItemClickEnabled="False"
             ItemsSource="{x:Bind viewModel.Packages}"
             ItemTemplate="{StaticResource packageItemTemplate}"

@@ -3,12 +3,95 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:AndroidManager.Views"
+    xmlns:models="using:AndroidManager.Models"
+    xmlns:converters="using:AndroidManager.Converters"
+    xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
+    Background="{ThemeResource SystemChromeAltMediumHighColor}">
+    <Page.Resources>
+        <converters:RadioButtonConverter x:Key="selectedRadioButtonConverter" />
+        
+        <Style x:Name="SettingHeader" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+    </Page.Resources>
     <Grid>
-        <TextBlock>Settings</TextBlock>
+        <NavigationView
+            PaneDisplayMode="Top"
+            IsBackButtonVisible="Visible"
+            IsSettingsVisible="False"
+            IsBackEnabled="True"
+            x:Uid="SettingsPageTitle"
+            Header="Setting"
+            BackRequested="BackToMainPage" >
+            <StackPanel Grid.Row="2" Margin="48 0 48 0" Orientation="Vertical" HorizontalAlignment="Left" >
+                <RadioButtons x:Name="languageSettingRadioGroup"
+                              Loaded="LanguageSettingRadioGroup_Loaded"
+                              Margin="0 24 0 0" >
+                <RadioButtons.Items>
+                    <RadioButton x:Uid="SettingsPageLangDefault" Content="Default" Tag="default"></RadioButton>
+                    <RadioButton Content="English" Tag="en-US"></RadioButton>
+                    <RadioButton Content="中文" Tag="zh-CN"></RadioButton>
+                </RadioButtons.Items>
+                <RadioButtons.HeaderTemplate>
+                    <DataTemplate>
+                        <TextBlock x:Uid="SettingsPageLanguageHeader" Text="Language" Style="{StaticResource SettingHeader}"></TextBlock>
+                    </DataTemplate>
+                </RadioButtons.HeaderTemplate>
+                <i:Interaction.Behaviors>
+                    <ic:EventTriggerBehavior EventName="SelectionChanged" SourceObject="{Binding ElementName=languageSettingRadioGroup}" >
+                        <ic:InvokeCommandAction 
+                            Command="{x:Bind viewModel.UpdateLanguageOptionCommand}" 
+                            CommandParameter="{Binding ElementName=languageSettingRadioGroup, 
+                                                       Path=SelectedItem, 
+                                                       Converter={StaticResource selectedRadioButtonConverter}}" />
+                    </ic:EventTriggerBehavior>
+                </i:Interaction.Behaviors>
+            </RadioButtons>
+            <RadioButtons x:Name="themeSettingRadioGroup"
+                          Loaded="ThemeSettingRadioGroup_Loaded"
+                          Margin="0 24 0 0" >
+                <RadioButtons.Items>
+                    <RadioButton x:Uid="SettingsPageThemeDefault" Content="Follow system theme" Tag="default"></RadioButton>
+                    <RadioButton x:Uid="SettingsPageThemeLight" Content="Light theme" Tag="light"></RadioButton>
+                    <RadioButton x:Uid="SettingsPageThemeDark" Content="Dark theme" Tag="dark"></RadioButton>
+                </RadioButtons.Items>
+                <RadioButtons.HeaderTemplate>
+                    <DataTemplate>
+                        <TextBlock x:Uid="SettingsPageThemeHeader" Text="Theme" Style="{StaticResource SettingHeader}"></TextBlock>
+                    </DataTemplate>
+                </RadioButtons.HeaderTemplate>
+                <i:Interaction.Behaviors>
+                    <ic:EventTriggerBehavior EventName="SelectionChanged" SourceObject="{Binding ElementName=themeSettingRadioGroup}" >
+                        <ic:InvokeCommandAction 
+                            Command="{x:Bind viewModel.UpdateThemeOptionCommand}" 
+                            CommandParameter="{Binding ElementName=themeSettingRadioGroup, 
+                                                       Path=SelectedItem, 
+                                                       Converter={StaticResource selectedRadioButtonConverter}}" />
+                    </ic:EventTriggerBehavior>
+                </i:Interaction.Behaviors>
+            </RadioButtons>
+            <TextBox x:Uid="SettingsPageAdbPath"
+                     PlaceholderText="Leave it to empty to use default adb in path"
+                     Width="400" 
+                     Text="{x:Bind viewModel.AdbPath, Mode=TwoWay}"
+                     Margin="0 24 0 0" >
+                <TextBox.HeaderTemplate>
+                    <DataTemplate>
+                        <TextBlock x:Uid="SettingsPageAdbPathHeader" Text="Adb path" Style="{StaticResource SettingHeader}"></TextBlock>
+                    </DataTemplate>
+                </TextBox.HeaderTemplate>
+            </TextBox>
+            <Button x:Uid="SettingsPageSaveButton" 
+                    Content="Save" Margin="0 24 0 0"
+                    Command="{x:Bind viewModel.SaveChangesCommand}"
+                    Style="{ThemeResource AccentButtonStyle}">
+            </Button>
+        </StackPanel>
+        </NavigationView>
     </Grid>
 </Page>
