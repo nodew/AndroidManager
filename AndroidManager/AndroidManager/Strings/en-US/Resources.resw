@@ -192,6 +192,12 @@
   <data name="DevicesPageStartAdbServerUnknownError" xml:space="preserve">
     <value>Unknown error, please run adb server by yourself</value>
   </data>
+  <data name="DevicesPageUnauthorizedText" xml:space="preserve">
+    <value>Please grant access on your device</value>
+  </data>
+  <data name="DevicesPageUnauthorizedTitle" xml:space="preserve">
+    <value>Unauthorized</value>
+  </data>
   <data name="FileExplorerPageDownloadButton.Label" xml:space="preserve">
     <value>Download</value>
   </data>

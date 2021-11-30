@@ -47,6 +47,11 @@ namespace AndroidManager.Views
             DeviceData device = (DeviceData)e.ClickedItem;
             if (device.State.HasFlag(DeviceState.Online))
             {
+                if (device.State.HasFlag(DeviceState.Unauthorized))
+                {
+                    FailedToViewDetails();
+                    return;
+                }
                 viewModel.SelectDeviceCommand.Execute(device);
                 MainWindow.Current.NavigateToDeviceDetailPage(device);
             }
@@ -80,15 +85,22 @@ namespace AndroidManager.Views
         private async void HandleFailedToAddDeviceEvent(object sender, FailedToAddDeviceEvent e)
         {
             ClearInputBox();
-            errorMessage.Text = e.ErrorMessage;
+            failureDialog.Content = e.ErrorMessage;
             failureDialog.Title = resourceLoader.GetString("DevicesPageConnectFailedDialogTitle");
             await failureDialog.ShowAsync();
         }
 
         private async void HandleFailedToStartAdbServer(object sender, FailedToStartAdbServerEvent e)
         {
-            errorMessage.Text = e.ErrorMessage;
+            failureDialog.Content = e.ErrorMessage;
             failureDialog.Title = resourceLoader.GetString("DevicesPageStartAdbServerDialogTitle");
+            await failureDialog.ShowAsync();
+        }
+
+        private async void FailedToViewDetails()
+        {
+            failureDialog.Content = resourceLoader.GetString("DevicesPageUnauthorizedText");
+            failureDialog.Title = resourceLoader.GetString("DevicesPageUnauthorizedTitle");
             await failureDialog.ShowAsync();
         }
     }
