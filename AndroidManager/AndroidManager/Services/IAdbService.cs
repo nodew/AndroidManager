@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AndroidManager.Services
@@ -10,8 +11,8 @@ namespace AndroidManager.Services
     {
         public string GetAdbExePath();
 
-        public void StartAdbServer();
+        public Task StartAdbServerAsync(CancellationToken cancellationToken = default);
 
-        public void StartAdbServer(string adbPath);
+        public Task StartAdbServerAsync(string adbPath, CancellationToken cancellationToken = default);
     }
 }

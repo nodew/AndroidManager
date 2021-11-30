@@ -50,7 +50,7 @@ namespace AndroidManager.ViewModels
             ConnectToNewDeviceCommand = new RelayCommand(ConnectToNewDevice, CanConnectToNewDevice);
             ClearInputCommand = new RelayCommand(ClearInput);
             SelectDeviceCommand = new RelayCommand<DeviceData>(SelectDevice);
-            StartAdbServerCommand = new RelayCommand(StartAdbServer, CanStartAdbServer);
+            StartAdbServerCommand = new AsyncRelayCommand(StartAdbServerAsync, CanStartAdbServer);
             
             SetupAdbPath();
             UpdateAdbServerStatus();
@@ -65,7 +65,7 @@ namespace AndroidManager.ViewModels
         public ICommand ConnectToNewDeviceCommand { get; }
         public ICommand ClearInputCommand { get; }
         public ICommand SelectDeviceCommand { get; }
-        public ICommand StartAdbServerCommand { get; }
+        public IAsyncRelayCommand StartAdbServerCommand { get; }
 
         public ObservableCollection<DeviceData> Devices
         {
@@ -148,12 +148,14 @@ namespace AndroidManager.ViewModels
             UpdateAdbServerStatus();
             if (AdbServerIsRunning)
             {
-                MainWindow.Current.DispatcherQueue.TryEnqueue(DispatcherQueuePriority.Normal, async () =>
-                {
-                    await Task.Delay(300);
-                    LoadConnectedDevices();
-                });
+                LoadConnectedDevices();
             }
+        }
+
+        private async Task RefreshConnectedDevicesWithDelayAsync()
+        {
+            await Task.Delay(300);
+            RefreshConnectedDevices();
         }
 
         private void ConnectToNewDevice()
@@ -179,35 +181,33 @@ namespace AndroidManager.ViewModels
             return true;
         }
 
-        private void StartAdbServer()
+        private async Task StartAdbServerAsync()
         {
             if (string.IsNullOrEmpty(_adbPath) || !File.Exists(_adbPath))
             {
                 WeakReferenceMessenger.Default.Send(new FailedToStartAdbServerEvent(resourceLoader.GetString("DevicesPageInvalidAdbExe")));
                 return;
             }
-            MainWindow.Current.DispatcherQueue.TryEnqueue(DispatcherQueuePriority.Normal, async () =>
+            
+            try
             {
-                try
+                await _adbService.StartAdbServerAsync(_adbPath);
+                await Task.Delay(300);
+                UpdateAdbServerStatus();
+                if (AdbServerIsRunning)
                 {
-                    await Task.Run(() => _adbService.StartAdbServer(_adbPath));
-                    await Task.Delay(300);
-                    UpdateAdbServerStatus();
-                    if (AdbServerIsRunning)
-                    {
-                        SetupMonitor();
-                        RefreshConnectedDevices();
-                    }
-                    else
-                    {
-                        WeakReferenceMessenger.Default.Send(new FailedToStartAdbServerEvent(resourceLoader.GetString("DevicesPageStartAdbServerUnknownError")));
-                    }
-                } 
-                catch (Exception ex)
-                {
-                    WeakReferenceMessenger.Default.Send(new FailedToStartAdbServerEvent(ex.Message));
+                    SetupMonitor();
+                    await RefreshConnectedDevicesWithDelayAsync();
                 }
-            });
+                else
+                {
+                    WeakReferenceMessenger.Default.Send(new FailedToStartAdbServerEvent(resourceLoader.GetString("DevicesPageStartAdbServerUnknownError")));
+                }
+            } 
+            catch (Exception ex)
+            {
+                WeakReferenceMessenger.Default.Send(new FailedToStartAdbServerEvent(ex.Message));
+            }
         }
 
         private bool CanStartAdbServer()
@@ -244,7 +244,10 @@ namespace AndroidManager.ViewModels
 
         private void OnDeviceListUpdated(object sender, DeviceDataEventArgs e)
         {
-            RefreshConnectedDevices();
+            MainWindow.Current.DispatcherQueue.TryEnqueue(DispatcherQueuePriority.Normal, async () =>
+            {
+                await RefreshConnectedDevicesWithDelayAsync();
+            });
         }
     }
 }

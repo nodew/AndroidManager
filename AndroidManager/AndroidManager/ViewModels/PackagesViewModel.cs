@@ -18,7 +18,6 @@ namespace AndroidManager.ViewModels
     {
         private PackageManager _packageManager;
         private ObservableCollection<Package> _packages;
-        private bool _installing;
 
         public PackagesViewModel(AdbClient adbClient, DevicesViewModel devicesViweModel)
         {
@@ -27,23 +26,17 @@ namespace AndroidManager.ViewModels
             _packages = new ObservableCollection<Package>();
 
             RefreshPackagesCommand = new RelayCommand(RefreshPackages);
-            InstallNewPackageCommand = new RelayCommand<string>(InstallNewPackage);
+            InstallNewPackageCommand = new AsyncRelayCommand<string>(InstallNewPackageAsync);
 
             LoadPackages();
         }
 
         public ICommand RefreshPackagesCommand;
-        public ICommand InstallNewPackageCommand;
+        public IAsyncRelayCommand<string> InstallNewPackageCommand;
 
         public ObservableCollection<Package> Packages
         {
             get { return _packages; }
-        }
-
-        public bool Installing
-        {
-            get { return _installing; }
-            set { SetProperty(ref _installing, value); }
         }
 
         private void LoadPackages()
@@ -65,27 +58,18 @@ namespace AndroidManager.ViewModels
             LoadPackages();
         }
 
-        private void InstallNewPackage(string filepath)
+        private async Task InstallNewPackageAsync(string filepath)
         {
-            Installing = true;
-            MainWindow.Current.DispatcherQueue.TryEnqueue(DispatcherQueuePriority.Normal, async () =>
+            try
             {
-                try
-                {
-                    await Task.Run(() => _packageManager.InstallPackage(filepath, false));
-                    RefreshPackages();
-                    WeakReferenceMessenger.Default.Send(new PackageInstalledEvent() { Filepath = filepath });
-                }
-                catch (PackageInstallationException ex)
-                {
-                    WeakReferenceMessenger.Default.Send(ex);
-                } 
-                finally
-                {
-                    Installing = false;
-                }
-            });
-            
+                await Task.Run(() => _packageManager.InstallPackage(filepath, false));
+                RefreshPackages();
+                WeakReferenceMessenger.Default.Send(new PackageInstalledEvent() { Filepath = filepath });
+            }
+            catch (PackageInstallationException ex)
+            {
+                WeakReferenceMessenger.Default.Send(ex);
+            } 
         }
     }
 }

@@ -39,7 +39,7 @@
                     Command="{x:Bind viewModel.RefreshPackagesCommand}"/>
             </CommandBar>
         </StackPanel>
-        <ProgressBar Grid.Row="1" IsIndeterminate="True" ShowPaused="False" ShowError="False" Visibility="{x:Bind viewModel.Installing, Mode=OneWay}" />
+        <ProgressBar Grid.Row="1" IsIndeterminate="True" ShowPaused="False" ShowError="False" Visibility="{x:Bind viewModel.InstallNewPackageCommand.IsRunning, Mode=OneWay}" />
         <ListView
             x:Name="packageListView"
             Grid.Row="2"

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AndroidManager.Services
@@ -20,20 +21,25 @@ namespace AndroidManager.Services
             return output;
         }
 
-        public void StartAdbServer()
+        public async Task StartAdbServerAsync(CancellationToken cancellationToken = default)
         {
-            StartAdbServer(GetAdbExePath());
+            await StartAdbServerAsync(GetAdbExePath(), cancellationToken);
         }
 
-        public void StartAdbServer(string adbPath)
+        /// <summary>
+        /// The StartServer export in SharpAdbClient will hang
+        /// </summary>
+        /// <param name="adbPath">The customized adb path</param>
+        /// <returns></returns>
+        public async Task StartAdbServerAsync(string adbPath, CancellationToken cancellationToken = default)
         {
             using var process = new Process();
             process.StartInfo = GetProcessStartInfo(adbPath, "start-server");
             process.Start();
-            process.WaitForExit();
+            await process.WaitForExitAsync(cancellationToken);
         }
 
-        private ProcessStartInfo GetProcessStartInfo(string cmd, string args)
+        private static ProcessStartInfo GetProcessStartInfo(string cmd, string args)
         {
             ProcessStartInfo startInfo = new()
             {
@@ -43,7 +49,9 @@ namespace AndroidManager.Services
                 WindowStyle = ProcessWindowStyle.Hidden,
                 UseShellExecute = false,
                 RedirectStandardError = true,
-                RedirectStandardOutput = true
+                RedirectStandardOutput = true,
+                StandardErrorEncoding = Encoding.UTF8,
+                StandardOutputEncoding = Encoding.UTF8,
             };
             return startInfo;
         }
