@@ -186,9 +186,6 @@
             x:Uid="DevicesPageFailureDialog"
             PrimaryButtonText="Confirm"
             CloseButtonText="Cancel">
-            <StackPanel>
-                <TextBlock x:Name="errorMessage" />
-            </StackPanel>
         </ContentDialog>
     </Grid>
 </Page>
