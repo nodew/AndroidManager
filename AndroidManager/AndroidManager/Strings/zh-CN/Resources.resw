@@ -192,6 +192,12 @@
   <data name="DevicesPageStartAdbServerUnknownError" xml:space="preserve">
     <value>未知错误，请尝试自行启用 adb 服务</value>
   </data>
+  <data name="DevicesPageUnauthorizedText" xml:space="preserve">
+    <value>请授予设备的访问权限</value>
+  </data>
+  <data name="DevicesPageUnauthorizedTitle" xml:space="preserve">
+    <value>未授权</value>
+  </data>
   <data name="FileExplorerPageDownloadButton.Label" xml:space="preserve">
     <value>下载</value>
   </data>
