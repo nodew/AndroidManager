@@ -17,6 +17,7 @@ namespace AndroidManager.Services
         public DeviceDetailReceiver()
         {
             _detail = new DeviceDetail();
+            TrimLines = true;
         }
 
         public DeviceDetail Detail { get { return _detail; } }

@@ -20,10 +20,24 @@ namespace AndroidManager.Services
 
         public async Task<DeviceDetail> GetDeviceDetailAsync(DeviceData device, CancellationToken cancellationToken = default)
         {
-            var receiver = new DeviceDetailReceiver() { TrimLines = true };
+            var receiver = new DeviceDetailReceiver();
             await _adbClient.ExecuteRemoteCommandAsync("getprop", device, receiver, cancellationToken);
             
             return receiver.Detail;
+        }
+
+        public async Task<List<string>> ListSystemPackagesAsync(DeviceData device, CancellationToken cancellationToken = default)
+        {
+            var receiver = new PackageReceiver();
+            await _adbClient.ExecuteRemoteCommandAsync("pm list packages -s", device, receiver, cancellationToken);
+            return receiver.Packages;
+        }
+
+        public async Task<List<string>> ListThirdPartyPackagesAsync(DeviceData device, CancellationToken cancellationToken = default)
+        {
+            var receiver = new PackageReceiver();
+            await _adbClient.ExecuteRemoteCommandAsync("pm list packages -3", device, receiver, cancellationToken);
+            return receiver.Packages;
         }
     }
 }

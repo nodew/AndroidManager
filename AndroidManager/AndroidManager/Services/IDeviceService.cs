@@ -12,5 +12,9 @@ namespace AndroidManager.Services
     public interface IDeviceService
     {
         public Task<DeviceDetail> GetDeviceDetailAsync(DeviceData device, CancellationToken cancellationToken = default);
+
+        public Task<List<string>> ListThirdPartyPackagesAsync(DeviceData device, CancellationToken cancellationToken = default);
+
+        public Task<List<string>> ListSystemPackagesAsync(DeviceData device, CancellationToken cancellationToken = default);
     }
 }

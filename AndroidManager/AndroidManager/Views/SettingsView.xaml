@@ -12,7 +12,7 @@
     mc:Ignorable="d"
     Background="{ThemeResource SystemChromeAltMediumHighColor}">
     <Page.Resources>
-        <converters:RadioButtonConverter x:Key="selectedRadioButtonConverter" />
+        <converters:ControlTagConverter x:Key="controlTagConverter" />
         
         <Style x:Name="SettingHeader" TargetType="TextBlock">
             <Setter Property="FontSize" Value="18" />
@@ -48,7 +48,7 @@
                             Command="{x:Bind viewModel.UpdateLanguageOptionCommand}" 
                             CommandParameter="{Binding ElementName=languageSettingRadioGroup, 
                                                        Path=SelectedItem, 
-                                                       Converter={StaticResource selectedRadioButtonConverter}}" />
+                                                       Converter={StaticResource controlTagConverter}}" />
                     </ic:EventTriggerBehavior>
                 </i:Interaction.Behaviors>
             </RadioButtons>
@@ -71,7 +71,7 @@
                             Command="{x:Bind viewModel.UpdateThemeOptionCommand}" 
                             CommandParameter="{Binding ElementName=themeSettingRadioGroup, 
                                                        Path=SelectedItem, 
-                                                       Converter={StaticResource selectedRadioButtonConverter}}" />
+                                                       Converter={StaticResource controlTagConverter}}" />
                     </ic:EventTriggerBehavior>
                 </i:Interaction.Behaviors>
             </RadioButtons>

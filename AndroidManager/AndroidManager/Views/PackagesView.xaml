@@ -4,6 +4,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:AndroidManager.Views"
     xmlns:model="using:AndroidManager.Models"
+    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:converters="using:AndroidManager.Converters"
+    xmlns:ic="using:Microsoft.Xaml.Interactions.Core" 
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
@@ -12,9 +16,27 @@
         <DataTemplate x:Name="packageItemTemplate" x:DataType="model:Package">
             <StackPanel Orientation="Vertical" Padding="12 6">
                 <TextBlock Text="{x:Bind Name}" FontSize="18" FontWeight="SemiBold" TextWrapping="Wrap"></TextBlock>
-                <TextBlock Text="{x:Bind Path}" TextWrapping="Wrap"></TextBlock>
             </StackPanel>
         </DataTemplate>
+        <DataTemplate x:Name="noSelectionDataTemplate">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <SymbolIcon Symbol="Mail"
+                            RenderTransformOrigin=".5,.5">
+                    <SymbolIcon.RenderTransform>
+                        <CompositeTransform ScaleX="2" ScaleY="2"/>
+                    </SymbolIcon.RenderTransform>
+                </SymbolIcon>
+                <TextBlock Text="Select a package to view the details"
+                           FontSize="24"
+                           Margin="0,12"/>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Name="packageDetailsDataTemplate">
+            <StackPanel MinHeight="400">
+                <TextBlock>TODO</TextBlock>
+            </StackPanel>
+        </DataTemplate>
+        <converters:ControlTagConverter x:Key="controlTagConverter" />
     </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -40,15 +62,43 @@
             </CommandBar>
         </StackPanel>
         <ProgressBar Grid.Row="1" IsIndeterminate="True" ShowPaused="False" ShowError="False" Visibility="{x:Bind viewModel.InstallNewPackageCommand.IsRunning, Mode=OneWay}" />
-        <ListView
-            x:Name="packageListView"
-            Grid.Row="2"
-            IsItemClickEnabled="False"
-            ItemsSource="{x:Bind viewModel.Packages}"
-            ItemTemplate="{StaticResource packageItemTemplate}"
-            HorizontalContentAlignment="Stretch"
-            Margin="24 0"
-            SelectionMode="Single" >
-        </ListView>
+        <TabView Grid.Row="2" 
+                 x:Name="packagesViewTab"
+                 IsAddTabButtonVisible="False"
+                 TabWidthMode="SizeToContent"
+                 Margin="24 0 24 0" >
+            <i:Interaction.Behaviors>
+                <ic:EventTriggerBehavior SourceObject="{Binding ElementName=packagesViewTab}" EventName="SelectionChanged">
+                    <ic:InvokeCommandAction 
+                        Command="{x:Bind viewModel.SwitchTabCommand}" 
+                        CommandParameter="{Binding ElementName=packagesViewTab, Path=SelectedItem, Converter={StaticResource controlTagConverter}}" >
+                    </ic:InvokeCommandAction>
+                </ic:EventTriggerBehavior>
+            </i:Interaction.Behaviors>
+            <TabView.TabItems>
+                <TabViewItem Header="Third party packages" IsClosable="False" Tag="ThirdParty">
+                    <controls:ListDetailsView
+                        x:Name="thirdPartyPackageListView"
+                        ListPaneWidth="500"
+                        ItemsSource="{x:Bind viewModel.ThirdPartyPackages}"
+                        ItemTemplate="{StaticResource packageItemTemplate}"
+                        HorizontalContentAlignment="Stretch"
+                        NoSelectionContentTemplate="{StaticResource noSelectionDataTemplate}"
+                        DetailsTemplate="{StaticResource packageDetailsDataTemplate}" >
+                    </controls:ListDetailsView>
+                </TabViewItem>
+                <TabViewItem Header="System packages" IsClosable="False" Tag="System">
+                    <controls:ListDetailsView
+                        x:Name="systemPackageListView" 
+                        ListPaneWidth="500"
+                        ItemsSource="{x:Bind viewModel.SystemPackages}"
+                        ItemTemplate="{StaticResource packageItemTemplate}"
+                        HorizontalContentAlignment="Stretch"
+                        NoSelectionContentTemplate="{StaticResource noSelectionDataTemplate}"
+                        DetailsTemplate="{StaticResource packageDetailsDataTemplate}" >
+                    </controls:ListDetailsView>
+                </TabViewItem>
+            </TabView.TabItems>
+        </TabView>
     </Grid>
 </Page>

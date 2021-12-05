@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace AndroidManager.Converters
 {
-    public class RadioButtonConverter : IValueConverter
+    public class ControlTagConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            var item = (RadioButton)value;
-            return item?.Tag?.ToString() ?? string.Empty;
+            var control = (Control)value;
+            return control?.Tag?.ToString() ?? string.Empty;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

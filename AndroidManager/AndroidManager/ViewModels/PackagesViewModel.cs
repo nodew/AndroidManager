@@ -11,51 +11,105 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Microsoft.UI.Dispatching;
+using AndroidManager.Services;
 
 namespace AndroidManager.ViewModels
 {
     public class PackagesViewModel : ViewModelBase
     {
-        private PackageManager _packageManager;
-        private ObservableCollection<Package> _packages;
+        private readonly PackageManager _packageManager;
+        private readonly IDeviceService _deviceService;
+        private readonly DeviceData _selectedDevice;
+        private readonly ObservableCollection<Package> _systemPackages;
+        private readonly ObservableCollection<Package> _thirdPartyPackages;
 
-        public PackagesViewModel(IAdbClient adbClient, DevicesViewModel devicesViewModel)
+        private PackagesViewType _viewType;
+
+        public PackagesViewModel(
+            IAdbClient adbClient, 
+            IDeviceService deviceService,
+            DevicesViewModel devicesViewModel
+        )
         {
             DeviceData device = devicesViewModel.CurrentSelectedDevice;
+            _deviceService = deviceService;
+            _selectedDevice = device;
+            _viewType = PackagesViewType.ThirdParty;
             _packageManager = new PackageManager(adbClient, device);
-            _packages = new ObservableCollection<Package>();
+            _systemPackages = new ObservableCollection<Package>();
+            _thirdPartyPackages = new ObservableCollection<Package>();
 
-            RefreshPackagesCommand = new RelayCommand(RefreshPackages);
+            RefreshPackagesCommand = new AsyncRelayCommand(RefreshPackagesAsync);
             InstallNewPackageCommand = new AsyncRelayCommand<string>(InstallNewPackageAsync);
+            SwitchTabCommand = new RelayCommand<string>(SwitchTab);
 
-            LoadPackages();
+            _= LoadThirdPartyPackagesAsync();
+            _ = LoadSystemPackagesAsync();
         }
 
-        public ICommand RefreshPackagesCommand;
+        public IAsyncRelayCommand RefreshPackagesCommand;
         public IAsyncRelayCommand<string> InstallNewPackageCommand;
+        public ICommand SwitchTabCommand;
 
-        public ObservableCollection<Package> Packages
+        public ObservableCollection<Package> SystemPackages
         {
-            get { return _packages; }
+            get { return _systemPackages; }
         }
 
-        private void LoadPackages()
+        public ObservableCollection<Package> ThirdPartyPackages
         {
-            Packages.Clear();
-            foreach (var item in _packageManager.Packages)
+            get { return _thirdPartyPackages; }
+        }
+
+        public PackagesViewType ViewType
+        {
+            get { return _viewType; }
+            set { SetProperty(ref _viewType, value); }
+        }
+
+        private async Task LoadSystemPackagesAsync()
+        {
+            SystemPackages.Clear();
+
+            var systemPackages = await _deviceService.ListSystemPackagesAsync(_selectedDevice);
+
+            foreach (var item in systemPackages)
             {
-                Packages.Add(new Package()
+                SystemPackages.Add(new Package()
                 {
-                    Name = item.Key,
-                    Path = item.Value
+                    Name = item,
+                    IsThirdParty = false
                 });
             }
         }
 
-        private void RefreshPackages()
+        private async Task LoadThirdPartyPackagesAsync()
+        {
+            ThirdPartyPackages.Clear();
+
+            var thirdPartyPackages = await _deviceService.ListThirdPartyPackagesAsync(_selectedDevice);
+
+            foreach (var item in thirdPartyPackages)
+            {
+                ThirdPartyPackages.Add(new Package()
+                {
+                    Name = item,
+                    IsThirdParty = true
+                });
+            }
+        }
+
+        private async Task RefreshPackagesAsync()
         {
             _packageManager.RefreshPackages();
-            LoadPackages();
+            if (ViewType == PackagesViewType.ThirdParty)
+            {
+                await LoadThirdPartyPackagesAsync();
+            }
+            else
+            {
+                await LoadSystemPackagesAsync();
+            }
         }
 
         private async Task InstallNewPackageAsync(string filepath)
@@ -63,13 +117,27 @@ namespace AndroidManager.ViewModels
             try
             {
                 await Task.Run(() => _packageManager.InstallPackage(filepath, false));
-                RefreshPackages();
+                await RefreshPackagesAsync();
                 WeakReferenceMessenger.Default.Send(new PackageInstalledEvent() { Filepath = filepath });
             }
             catch (PackageInstallationException ex)
             {
                 WeakReferenceMessenger.Default.Send(ex);
             } 
+        }
+
+        private void SwitchTab(string tab)
+        {
+            if(Enum.TryParse(tab, out PackagesViewType viewType)) 
+            {
+                ViewType = viewType;
+            }
+        }
+
+        public enum PackagesViewType
+        {
+            System,
+            ThirdParty,
         }
     }
 }
