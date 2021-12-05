@@ -14,11 +14,11 @@
 
     <Page.Resources>
         <DataTemplate x:Name="packageItemTemplate" x:DataType="model:Package">
-            <StackPanel Orientation="Vertical" Padding="12 6">
-                <TextBlock Text="{x:Bind Name}" FontSize="18" FontWeight="SemiBold" TextWrapping="Wrap"></TextBlock>
+            <StackPanel Padding="0,6">
+                <TextBlock Text="{x:Bind Name}" FontSize="18" FontWeight="SemiBold" TextWrapping="NoWrap"></TextBlock>
             </StackPanel>
         </DataTemplate>
-        <DataTemplate x:Name="noSelectionDataTemplate">
+        <DataTemplate x:Name="noSelectionDataTemplate" x:DataType="model:Package">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <SymbolIcon Symbol="Mail"
                             RenderTransformOrigin=".5,.5">
@@ -31,7 +31,7 @@
                            Margin="0,12"/>
             </StackPanel>
         </DataTemplate>
-        <DataTemplate x:Name="packageDetailsDataTemplate">
+        <DataTemplate x:Name="packageDetailsDataTemplate" x:DataType="model:Package">
             <StackPanel MinHeight="400">
                 <TextBlock>TODO</TextBlock>
             </StackPanel>
@@ -62,43 +62,35 @@
             </CommandBar>
         </StackPanel>
         <ProgressBar Grid.Row="1" IsIndeterminate="True" ShowPaused="False" ShowError="False" Visibility="{x:Bind viewModel.InstallNewPackageCommand.IsRunning, Mode=OneWay}" />
-        <TabView Grid.Row="2" 
-                 x:Name="packagesViewTab"
-                 IsAddTabButtonVisible="False"
-                 TabWidthMode="SizeToContent"
-                 Margin="24 0 24 0" >
+        <Pivot Grid.Row="2"
+               Margin="24,0"
+               x:Name="packagesViewPivot" >
             <i:Interaction.Behaviors>
-                <ic:EventTriggerBehavior SourceObject="{Binding ElementName=packagesViewTab}" EventName="SelectionChanged">
+                <ic:EventTriggerBehavior SourceObject="{Binding ElementName=packagesViewPivot}" EventName="SelectionChanged">
                     <ic:InvokeCommandAction 
                         Command="{x:Bind viewModel.SwitchTabCommand}" 
                         CommandParameter="{Binding ElementName=packagesViewTab, Path=SelectedItem, Converter={StaticResource controlTagConverter}}" >
                     </ic:InvokeCommandAction>
                 </ic:EventTriggerBehavior>
             </i:Interaction.Behaviors>
-            <TabView.TabItems>
-                <TabViewItem Header="Third party packages" IsClosable="False" Tag="ThirdParty">
-                    <controls:ListDetailsView
-                        x:Name="thirdPartyPackageListView"
-                        ListPaneWidth="500"
-                        ItemsSource="{x:Bind viewModel.ThirdPartyPackages}"
-                        ItemTemplate="{StaticResource packageItemTemplate}"
-                        HorizontalContentAlignment="Stretch"
-                        NoSelectionContentTemplate="{StaticResource noSelectionDataTemplate}"
-                        DetailsTemplate="{StaticResource packageDetailsDataTemplate}" >
-                    </controls:ListDetailsView>
-                </TabViewItem>
-                <TabViewItem Header="System packages" IsClosable="False" Tag="System">
-                    <controls:ListDetailsView
-                        x:Name="systemPackageListView" 
-                        ListPaneWidth="500"
+            <PivotItem Header="Third party packages" Tag="ThirdParty">
+                <controls:ListDetailsView
+                    x:Name="thirdPartyPackageListView"
+                    ItemsSource="{x:Bind viewModel.ThirdPartyPackages}"
+                    ItemTemplate="{StaticResource packageItemTemplate}"
+                    NoSelectionContentTemplate="{StaticResource noSelectionDataTemplate}"
+                    DetailsTemplate="{StaticResource packageDetailsDataTemplate}" >
+                </controls:ListDetailsView>
+            </PivotItem>
+            <PivotItem Header="System packages" Tag="System">
+                <controls:ListDetailsView
+                        x:Name="systemPackageListView"
                         ItemsSource="{x:Bind viewModel.SystemPackages}"
                         ItemTemplate="{StaticResource packageItemTemplate}"
-                        HorizontalContentAlignment="Stretch"
                         NoSelectionContentTemplate="{StaticResource noSelectionDataTemplate}"
                         DetailsTemplate="{StaticResource packageDetailsDataTemplate}" >
-                    </controls:ListDetailsView>
-                </TabViewItem>
-            </TabView.TabItems>
-        </TabView>
+                </controls:ListDetailsView>
+            </PivotItem>
+        </Pivot>
     </Grid>
 </Page>
