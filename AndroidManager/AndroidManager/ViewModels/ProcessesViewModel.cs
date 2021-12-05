@@ -15,13 +15,13 @@ namespace AndroidManager.ViewModels
 {
     public class ProcessesViewModel : ViewModelBase
     {
-        private AdbClient _adbClient;
+        private IAdbClient _adbClient;
         private DeviceData _device;
 
         private ObservableCollection<AndroidProcess> _processes;
         private List<AndroidProcess> _originalOrderedProcesses;
 
-        public ProcessesViewModel(AdbClient adbClient, DevicesViewModel devicesViewModel)
+        public ProcessesViewModel(IAdbClient adbClient, DevicesViewModel devicesViewModel)
         {
             _adbClient = adbClient;
             _device = devicesViewModel.CurrentSelectedDevice;

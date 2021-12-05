@@ -1,4 +1,6 @@
-﻿using Microsoft.UI.Xaml;
+﻿using AndroidManager.Services;
+using AndroidManager.ViewModels;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
@@ -26,13 +28,17 @@ namespace AndroidManager.Views
     {
         private readonly Dictionary<string, Type> viewMapping = new()
         {
+            { "General", typeof(DeviceDetailView) },
             { "Packages", typeof(PackagesView) },
             { "Processes", typeof(ProcessesView) },
             { "FileExplorer", typeof(FileExplorerView) }
         };
 
+        private readonly DeviceDetailLandingViewModel viewModel;
+
         public DeviceDetailLandingView()
         {
+            viewModel = ServicesProvider.GetService<DeviceDetailLandingViewModel>();
             this.InitializeComponent();
         }
 
@@ -56,7 +62,7 @@ namespace AndroidManager.Views
 
         private void DeviceDetailNav_Loaded(object sender, RoutedEventArgs e)
         {
-            detailContent.Navigate(typeof(PackagesView));
+            detailContent.Navigate(typeof(DeviceDetailView));
             deviceDetailNav.SelectedItem = deviceDetailNav.MenuItems[0];
         }
     }

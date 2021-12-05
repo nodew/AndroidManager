@@ -13,13 +13,13 @@ namespace AndroidManager.ViewModels
 {
     public class FileExplorerViewModel : ViewModelBase
     {
-        private AdbClient _adbClient;
+        private IAdbClient _adbClient;
         private DeviceData _device;
         private Stack<string> _parentFolder;
         private string _currentFolder;
         private ObservableCollection<FileItem> _files;
 
-        public FileExplorerViewModel(AdbClient adbClient, DevicesViewModel devicesViewModel)
+        public FileExplorerViewModel(IAdbClient adbClient, DevicesViewModel devicesViewModel)
         {
             _adbClient = adbClient;
             _device = devicesViewModel.CurrentSelectedDevice;

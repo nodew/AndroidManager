@@ -1,4 +1,5 @@
 ﻿using AndroidManager.Models;
+using AndroidManager.Services;
 using AndroidManager.ViewModels;
 using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,7 +35,7 @@ namespace AndroidManager.Views
 
         public ProcessesView()
         {
-            viewModel = App.Current.Services.GetService<ProcessesViewModel>();
+            viewModel = ServicesProvider.GetService<ProcessesViewModel>();
             this.InitializeComponent();
             WeakReferenceMessenger.Default.Register<ProcessesRefreshed>(this, HandleProcessesRefreshed);
         }

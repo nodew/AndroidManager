@@ -9,7 +9,7 @@
     Background="{ThemeResource SystemChromeAltMediumHighColor}">
 
     <NavigationView 
-        x:Name="deviceDetailNav" 
+        x:Name="deviceDetailNav"
         PaneDisplayMode="Top"
         IsSettingsVisible="False"
         IsBackEnabled="True"
@@ -17,6 +17,14 @@
         Loaded="DeviceDetailNav_Loaded"
         SelectionChanged="DeviceDetailNav_SelectionChanged" >
         <NavigationView.MenuItems>
+            <NavigationViewItem  
+                x:Uid="DevicesLandingPageNavGeneral"
+                Content="General" 
+                Tag="General" >
+                <NavigationViewItem.Icon>
+                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xF158;" />
+                </NavigationViewItem.Icon>
+            </NavigationViewItem>
             <NavigationViewItem  
                 x:Uid="DevicesLandingPageNavPackages"
                 Content="Packages" 
@@ -42,6 +50,11 @@
                 </NavigationViewItem.Icon>
             </NavigationViewItem>
         </NavigationView.MenuItems>
+        <NavigationView.PaneFooter>
+            <StackPanel Margin="0 14 24 14">
+                <TextBlock Text="{x:Bind viewModel.NameOfSelectedDevice}"></TextBlock>
+            </StackPanel>
+        </NavigationView.PaneFooter>
         <Frame x:Name="detailContent"/>
     </NavigationView>
 </Page>

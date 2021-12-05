@@ -21,35 +21,44 @@ namespace AndroidManager.ViewModels
 {
     public class DevicesViewModel : ViewModelBase
     {
-        private readonly ObservableCollection<DeviceData> _devices;
-        private readonly AdbClient _adbClient;
+        private readonly ObservableCollection<Device> _devices;
+        private readonly IAdbClient _adbClient;
         private readonly IAdbService _adbService;
+        private readonly IDeviceService _deviceService;
         private readonly AppSettings _appSettings;
         private readonly ResourceLoader resourceLoader;
 
         private DeviceMonitor _monitor;
-        private DeviceData _currentSelectedDevice;
+        private Device _currentSelectedDevice;
         private bool _adbServerIsRunning;
         private bool _noDevices;
         private string _deviceHost;
         private string _devicePort;
         private string _adbPath;
+        private bool _loading;
 
-        public DevicesViewModel(AdbClient adbClient, IAdbService adbService, AppSettings appSettings)
+        public DevicesViewModel(
+            IAdbClient adbClient, 
+            IAdbService adbService,
+            IDeviceService deviceService,
+            AppSettings appSettings
+        )
         {
             _adbClient = adbClient;
             _adbService = adbService;
+            _deviceService = deviceService;
             _appSettings = appSettings;
 
             resourceLoader = new ResourceLoader();
-            _devices = new ObservableCollection<DeviceData>();
+            _devices = new ObservableCollection<Device>();
             _noDevices = true;
             _currentSelectedDevice = null;
+            _loading = false;
 
-            RefreshConnectedDevicesCommand = new RelayCommand(RefreshConnectedDevices);
+            RefreshConnectedDevicesCommand = new AsyncRelayCommand(RefreshConnectedDevicesAsync);
             ConnectToNewDeviceCommand = new RelayCommand(ConnectToNewDevice, CanConnectToNewDevice);
             ClearInputCommand = new RelayCommand(ClearInput);
-            SelectDeviceCommand = new RelayCommand<DeviceData>(SelectDevice);
+            SelectDeviceCommand = new RelayCommand<Device>(SelectDevice);
             StartAdbServerCommand = new AsyncRelayCommand(StartAdbServerAsync, CanStartAdbServer);
             
             SetupAdbPath();
@@ -67,7 +76,7 @@ namespace AndroidManager.ViewModels
         public ICommand SelectDeviceCommand { get; }
         public IAsyncRelayCommand StartAdbServerCommand { get; }
 
-        public ObservableCollection<DeviceData> Devices
+        public ObservableCollection<Device> Devices
         {
             get { return _devices; }
         }
@@ -84,7 +93,7 @@ namespace AndroidManager.ViewModels
             set { SetProperty(ref _adbServerIsRunning, value); }
         }
 
-        public DeviceData CurrentSelectedDevice 
+        public Device CurrentSelectedDevice 
         { 
             get {  return _currentSelectedDevice; }
             set { SetProperty(ref _currentSelectedDevice, value); }
@@ -100,21 +109,49 @@ namespace AndroidManager.ViewModels
             set { SetProperty(ref _devicePort, value); }
         }
 
-        private void LoadConnectedDevices()
+        private async Task LoadConnectedDevicesAsync()
         {
+            if (_loading)
+            {
+                return;
+            }
+            _loading = true;
             Devices.Clear();
             try
             {
                 var devices = _adbClient.GetDevices();
-                foreach (var device in devices)
+                foreach (var deviceData in devices)
                 {
+                    Device device = Device.FromDeviceData(deviceData);
+                    if (device.State == DeviceState.Online)
+                    {
+                        try
+                        {
+                            DeviceDetail deviceDetail = await _deviceService.GetDeviceDetailAsync(device);
+                            device.Name = deviceDetail.Name;
+                            device.Model = deviceDetail.Model;
+                            device.Brand = deviceDetail.Brand;
+                            device.SdkVersion = deviceDetail.SdkVersion;
+                            device.ReleaseVersion = deviceDetail.ReleaseVersion;
+                        }
+                        catch (Exception)
+                        {
+                            // Ignore
+                        }
+                    }
+
                     AddDevice(device);
                 }
+
                 NoDevices = devices.Count == 0;
             }
             catch (Exception)
             {
                 AdbServerIsRunning = false;
+            }
+            finally
+            {
+                _loading = false;
             }
         }
 
@@ -143,19 +180,19 @@ namespace AndroidManager.ViewModels
             }
         }
 
-        private void RefreshConnectedDevices()
+        private async Task RefreshConnectedDevicesAsync()
         {
             UpdateAdbServerStatus();
             if (AdbServerIsRunning)
             {
-                LoadConnectedDevices();
+                await LoadConnectedDevicesAsync();
             }
         }
 
         private async Task RefreshConnectedDevicesWithDelayAsync()
         {
             await Task.Delay(300);
-            RefreshConnectedDevices();
+            await RefreshConnectedDevicesAsync();
         }
 
         private void ConnectToNewDevice()
@@ -215,7 +252,7 @@ namespace AndroidManager.ViewModels
             return !AdbServerIsRunning;
         }
 
-        private void SelectDevice(DeviceData device)
+        private void SelectDevice(Device device)
         {
             CurrentSelectedDevice = device;
         }
@@ -232,7 +269,7 @@ namespace AndroidManager.ViewModels
             AdbServerIsRunning = status.IsRunning;
         }
 
-        private void AddDevice(DeviceData device)
+        private void AddDevice(Device device)
         {
             if (string.IsNullOrEmpty(device.Name))
             {

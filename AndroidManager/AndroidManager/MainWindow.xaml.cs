@@ -26,7 +26,7 @@ namespace AndroidManager
 
         public MainWindow()
         {
-            _appSettings = App.Current.Services.GetService<AppSettings>();
+            _appSettings = ServicesProvider.GetService<AppSettings>();
             resourceLoader = new ResourceLoader();
             this.Title = resourceLoader.GetString("AppName");
             this.InitializeComponent();

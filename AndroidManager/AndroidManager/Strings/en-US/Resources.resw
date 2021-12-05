@@ -123,6 +123,9 @@
   <data name="DevicesLandingPageNavFileExplorer.Content" xml:space="preserve">
     <value>File explorer</value>
   </data>
+  <data name="DevicesLandingPageNavGeneral.Content" xml:space="preserve">
+    <value>General</value>
+  </data>
   <data name="DevicesLandingPageNavPackages.Content" xml:space="preserve">
     <value>Packages</value>
   </data>
@@ -203,6 +206,42 @@
   </data>
   <data name="FileExplorerPageUploadButton.Label" xml:space="preserve">
     <value>Upload</value>
+  </data>
+  <data name="GeneralLabelAndroidVersion.Text" xml:space="preserve">
+    <value>Android version</value>
+  </data>
+  <data name="GeneralLabelBoard.Text" xml:space="preserve">
+    <value>Board</value>
+  </data>
+  <data name="GeneralLabelBoardPlatform.Text" xml:space="preserve">
+    <value>Board platfrom</value>
+  </data>
+  <data name="GeneralLabelBrand.Text" xml:space="preserve">
+    <value>Brand</value>
+  </data>
+  <data name="GeneralLabelBuildDate.Text" xml:space="preserve">
+    <value>Build date</value>
+  </data>
+  <data name="GeneralLabelBuildFingerprint.Text" xml:space="preserve">
+    <value>Build fingerprint</value>
+  </data>
+  <data name="GeneralLabelBuildID.Text" xml:space="preserve">
+    <value>Build ID</value>
+  </data>
+  <data name="GeneralLabelDevice.Text" xml:space="preserve">
+    <value>Device</value>
+  </data>
+  <data name="GeneralLabelLocale.Text" xml:space="preserve">
+    <value>Locale</value>
+  </data>
+  <data name="GeneralLabelManufacturer.Text" xml:space="preserve">
+    <value>Manufacturer</value>
+  </data>
+  <data name="GeneralLabelModel.Text" xml:space="preserve">
+    <value>Model</value>
+  </data>
+  <data name="GeneralLabelSdkVersion.Text" xml:space="preserve">
+    <value>SDK version</value>
   </data>
   <data name="PackagePageInstallPakcageButton.Label" xml:space="preserve">
     <value>Install new package</value>

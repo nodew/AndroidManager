@@ -123,6 +123,9 @@
   <data name="DevicesLandingPageNavFileExplorer.Content" xml:space="preserve">
     <value>文件浏览</value>
   </data>
+  <data name="DevicesLandingPageNavGeneral.Content" xml:space="preserve">
+    <value>基本信息</value>
+  </data>
   <data name="DevicesLandingPageNavPackages.Content" xml:space="preserve">
     <value>程序包管理</value>
   </data>
@@ -203,6 +206,42 @@
   </data>
   <data name="FileExplorerPageUploadButton.Label" xml:space="preserve">
     <value>上传</value>
+  </data>
+  <data name="GeneralLabelAndroidVersion.Text" xml:space="preserve">
+    <value>Android 版本</value>
+  </data>
+  <data name="GeneralLabelBoard.Text" xml:space="preserve">
+    <value>主板</value>
+  </data>
+  <data name="GeneralLabelBoardPlatform.Text" xml:space="preserve">
+    <value>主板平台</value>
+  </data>
+  <data name="GeneralLabelBrand.Text" xml:space="preserve">
+    <value>品牌</value>
+  </data>
+  <data name="GeneralLabelBuildDate.Text" xml:space="preserve">
+    <value>编译时间</value>
+  </data>
+  <data name="GeneralLabelBuildFingerprint.Text" xml:space="preserve">
+    <value>编译指纹</value>
+  </data>
+  <data name="GeneralLabelBuildID.Text" xml:space="preserve">
+    <value>编译 ID</value>
+  </data>
+  <data name="GeneralLabelDevice.Text" xml:space="preserve">
+    <value>设备</value>
+  </data>
+  <data name="GeneralLabelLocale.Text" xml:space="preserve">
+    <value>地区/语言</value>
+  </data>
+  <data name="GeneralLabelManufacturer.Text" xml:space="preserve">
+    <value>制造商</value>
+  </data>
+  <data name="GeneralLabelModel.Text" xml:space="preserve">
+    <value>型号</value>
+  </data>
+  <data name="GeneralLabelSdkVersion.Text" xml:space="preserve">
+    <value>SDK 版本</value>
   </data>
   <data name="PackagePageInstallPakcageButton.Label" xml:space="preserve">
     <value>安装 APK 包</value>

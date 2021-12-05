@@ -1,4 +1,5 @@
-﻿using AndroidManager.ViewModels;
+﻿using AndroidManager.Services;
+using AndroidManager.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -28,7 +29,7 @@ namespace AndroidManager.Views
         public SettingsViewModel viewModel;
         public SettingsView()
         {
-            viewModel = App.Current.Services.GetService<SettingsViewModel>();
+            viewModel = ServicesProvider.GetService<SettingsViewModel>();
             this.InitializeComponent();
         }
 

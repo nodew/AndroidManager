@@ -1,6 +1,5 @@
 ﻿using AndroidManager.Services;
 using AndroidManager.ViewModels;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -24,20 +23,14 @@ namespace AndroidManager.Views
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class FileExplorerView : Page
+    public sealed partial class DeviceDetailView : Page
     {
+        private DeviceDetailViewModel viewModel;
 
-        private FileExplorerViewModel viewModel;
-
-        public FileExplorerView()
+        public DeviceDetailView()
         {
-            viewModel = ServicesProvider.GetService<FileExplorerViewModel>();
+            viewModel = ServicesProvider.GetService<DeviceDetailViewModel>();
             this.InitializeComponent();
-        }
-
-        private void FileListView_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            viewModel.NavigateToFolderCommand.Execute(e.ClickedItem);
         }
     }
 }

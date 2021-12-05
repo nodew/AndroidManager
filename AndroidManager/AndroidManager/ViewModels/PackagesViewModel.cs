@@ -19,9 +19,9 @@ namespace AndroidManager.ViewModels
         private PackageManager _packageManager;
         private ObservableCollection<Package> _packages;
 
-        public PackagesViewModel(AdbClient adbClient, DevicesViewModel devicesViweModel)
+        public PackagesViewModel(IAdbClient adbClient, DevicesViewModel devicesViewModel)
         {
-            DeviceData device = devicesViweModel.CurrentSelectedDevice;
+            DeviceData device = devicesViewModel.CurrentSelectedDevice;
             _packageManager = new PackageManager(adbClient, device);
             _packages = new ObservableCollection<Package>();
 

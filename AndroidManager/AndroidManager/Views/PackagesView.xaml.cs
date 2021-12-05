@@ -1,4 +1,5 @@
-﻿using AndroidManager.ViewModels;
+﻿using AndroidManager.Services;
+using AndroidManager.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -32,7 +33,7 @@ namespace AndroidManager.Views
 
         public PackagesView()
         {
-            this.viewModel = App.Current.Services.GetService<PackagesViewModel>();
+            this.viewModel = ServicesProvider.GetService<PackagesViewModel>();
             this.InitializeComponent();
         }
 

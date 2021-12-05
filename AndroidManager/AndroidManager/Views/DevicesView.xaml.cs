@@ -1,5 +1,6 @@
 ﻿using AndroidManager.ViewModels;
 using AndroidManager.Models;
+using AndroidManager.Services;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
@@ -35,7 +36,7 @@ namespace AndroidManager.Views
 
         public DevicesView()
         {
-            viewModel = App.Current.Services.GetService<DevicesViewModel>();
+            viewModel = ServicesProvider.GetService<DevicesViewModel>();
             resourceLoader = new ResourceLoader();
             this.InitializeComponent();
             WeakReferenceMessenger.Default.Register<FailedToAddDeviceEvent>(this, HandleFailedToAddDeviceEvent);
@@ -45,13 +46,8 @@ namespace AndroidManager.Views
         private void DeviceList_ItemClick(object sender, ItemClickEventArgs e)
         {
             DeviceData device = (DeviceData)e.ClickedItem;
-            if (device.State.HasFlag(DeviceState.Online))
+            if (device.State == DeviceState.Online)
             {
-                if (device.State.HasFlag(DeviceState.Unauthorized))
-                {
-                    FailedToViewDetails();
-                    return;
-                }
                 viewModel.SelectDeviceCommand.Execute(device);
                 MainWindow.Current.NavigateToDeviceDetailPage(device);
             }

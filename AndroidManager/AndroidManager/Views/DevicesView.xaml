@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:AndroidManager.Views"
     xmlns:vm="using:AndroidManager.ViewModels"
+    xmlns:models="using:AndroidManager.Models"
     xmlns:adb="using:SharpAdbClient"
     xmlns:ic="using:Microsoft.Xaml.Interactions.Core" 
     xmlns:i="using:Microsoft.Xaml.Interactivity"
@@ -74,8 +75,8 @@
             </Grid>
         </DataTemplate>
         
-        <DataTemplate x:Name="deviceCardTemplate" x:DataType="adb:DeviceData" >
-            <Grid Width="400" Height="180">
+        <DataTemplate x:Name="deviceCardTemplate" x:DataType="models:Device" >
+            <Grid Width="420" Height="180">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="120" />
                     <ColumnDefinition Width="*" />
@@ -84,9 +85,8 @@
                     <Image Source="\Assets\android-os-100.png" Width="80" Height="80" />
                 </Grid>
                 <StackPanel Padding="12" Orientation="Vertical" VerticalAlignment="Center" Grid.Column="1">
-                    <TextBlock Text="{x:Bind Name}" FontSize="24" FontWeight="SemiBold" Foreground="{ThemeResource SystemChromeWhiteColor}"></TextBlock>
-                    <TextBlock Text="{x:Bind Model}" Foreground="{ThemeResource SystemChromeWhiteColor}"></TextBlock>
-                    <TextBlock Text="{x:Bind Serial}" Foreground="{ThemeResource SystemChromeWhiteColor}"></TextBlock>
+                    <TextBlock Text="{x:Bind DisplayName}" FontSize="20" FontWeight="SemiBold" Foreground="{ThemeResource SystemChromeWhiteColor}" TextWrapping="Wrap"></TextBlock>
+                    <TextBlock Text="{x:Bind Serial}" Foreground="{ThemeResource SystemChromeWhiteColor}" />
                     <TextBlock Text="{x:Bind State}" Foreground="{ThemeResource SystemChromeWhiteColor}"></TextBlock>
                 </StackPanel>
             </Grid>
