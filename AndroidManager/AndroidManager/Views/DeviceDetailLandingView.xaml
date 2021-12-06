@@ -7,54 +7,49 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource SystemChromeAltMediumHighColor}">
-
-    <NavigationView 
-        x:Name="deviceDetailNav"
-        PaneDisplayMode="Top"
-        IsSettingsVisible="False"
-        IsBackEnabled="True"
-        BackRequested="DeviceDetailNav_BackRequested"
-        Loaded="DeviceDetailNav_Loaded"
-        SelectionChanged="DeviceDetailNav_SelectionChanged" >
-        <NavigationView.MenuItems>
-            <NavigationViewItem  
-                x:Uid="DevicesLandingPageNavGeneral"
-                Content="General" 
-                Tag="General" >
-                <NavigationViewItem.Icon>
-                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xF158;" />
-                </NavigationViewItem.Icon>
-            </NavigationViewItem>
-            <NavigationViewItem  
-                x:Uid="DevicesLandingPageNavPackages"
-                Content="Packages" 
-                Tag="Packages" >
-                <NavigationViewItem.Icon>
-                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xF158;" />
-                </NavigationViewItem.Icon>
-            </NavigationViewItem>
-            <NavigationViewItem  
-                x:Uid="DevicesLandingPageNavProcesses"
-                Content="Processes"
-                Tag="Processes">
-                <NavigationViewItem.Icon>
-                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xF22C;" />
-                </NavigationViewItem.Icon>
-            </NavigationViewItem>
-            <NavigationViewItem  
-                x:Uid="DevicesLandingPageNavFileExplorer"
-                Content="File Explorer"
-                Tag="FileExplorer" >
-                <NavigationViewItem.Icon>
-                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xED25;" />
-                </NavigationViewItem.Icon>
-            </NavigationViewItem>
-        </NavigationView.MenuItems>
-        <NavigationView.PaneFooter>
-            <StackPanel Margin="0 14 24 14">
-                <TextBlock Text="{x:Bind viewModel.NameOfSelectedDevice}"></TextBlock>
-            </StackPanel>
-        </NavigationView.PaneFooter>
-        <Frame x:Name="detailContent"/>
-    </NavigationView>
+    <Grid>
+        <NavigationView 
+            x:Name="deviceDetailNav"
+            PaneDisplayMode="Top"
+            IsSettingsVisible="False"
+            IsBackButtonVisible="Collapsed"
+            Loaded="DeviceDetailNav_Loaded"
+            SelectionChanged="DeviceDetailNav_SelectionChanged" >
+            <NavigationView.MenuItems>
+                <NavigationViewItem  
+                    x:Uid="DevicesLandingPageNavGeneral"
+                    Content="General" 
+                    Tag="General" >
+                    <NavigationViewItem.Icon>
+                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xF158;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem  
+                    x:Uid="DevicesLandingPageNavPackages"
+                    Content="Packages" 
+                    Tag="Packages" >
+                    <NavigationViewItem.Icon>
+                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xF158;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem  
+                    x:Uid="DevicesLandingPageNavProcesses"
+                    Content="Processes"
+                    Tag="Processes">
+                    <NavigationViewItem.Icon>
+                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xF22C;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem  
+                    x:Uid="DevicesLandingPageNavFileExplorer"
+                    Content="File Explorer"
+                    Tag="FileExplorer" >
+                    <NavigationViewItem.Icon>
+                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xED25;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+            </NavigationView.MenuItems>
+            <Frame x:Name="detailContent"/>
+        </NavigationView>
+    </Grid>
 </Page>

@@ -19,10 +19,10 @@ namespace AndroidManager.ViewModels
         private string _currentFolder;
         private ObservableCollection<FileItem> _files;
 
-        public FileExplorerViewModel(IAdbClient adbClient, DevicesViewModel devicesViewModel)
+        public FileExplorerViewModel(IAdbClient adbClient, MainWindowViewModel mainWindowViewModel)
         {
             _adbClient = adbClient;
-            _device = devicesViewModel.CurrentSelectedDevice;
+            _device = mainWindowViewModel.CurrentSelectedDevice;
             _parentFolder = new Stack<string>();
             _files = new ObservableCollection<FileItem>();
             _currentFolder = "/";

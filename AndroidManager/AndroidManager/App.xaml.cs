@@ -76,7 +76,6 @@ namespace AndroidManager
 
             // Register view models
             services.AddSingleton<MainWindowViewModel>();
-            services.AddSingleton<DevicesViewModel, DevicesViewModel>();
             services.AddTransient<DeviceDetailLandingViewModel, DeviceDetailLandingViewModel>();
             services.AddTransient<DeviceDetailViewModel, DeviceDetailViewModel>();
             services.AddTransient<PackagesViewModel, PackagesViewModel>();

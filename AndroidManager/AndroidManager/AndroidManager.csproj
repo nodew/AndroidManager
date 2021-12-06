@@ -15,7 +15,6 @@
     <None Remove="Resources\Theme.xaml" />
     <None Remove="Views\DeviceDetailLandingView.xaml" />
     <None Remove="Views\DeviceDetailView.xaml" />
-    <None Remove="Views\DevicesView.xaml" />
     <None Remove="Views\FileExplorerView.xaml" />
     <None Remove="Views\PackagesView.xaml" />
     <None Remove="Views\ProcessesView.xaml" />
@@ -53,9 +52,6 @@
   </ItemGroup>
   <ItemGroup>
     <Page Update="Views\DeviceDetailLandingView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="Views\DevicesView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="Views\FileExplorerView.xaml">

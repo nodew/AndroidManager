@@ -14,9 +14,9 @@ namespace AndroidManager.ViewModels
         private readonly IDeviceService _deviceService;
         private DeviceDetail _deviceDetail;
 
-        public DeviceDetailViewModel(DevicesViewModel devicesViewModel, IDeviceService deviceService)
+        public DeviceDetailViewModel(MainWindowViewModel mainWindowViewModel, IDeviceService deviceService)
         {
-            _selectedDevice = devicesViewModel.CurrentSelectedDevice;
+            _selectedDevice = mainWindowViewModel.CurrentSelectedDevice;
             _deviceService = deviceService;
             _ = LoadDeviceDetailAsync();
         }
@@ -29,6 +29,7 @@ namespace AndroidManager.ViewModels
 
         private async Task LoadDeviceDetailAsync()
         {
+            if (_selectedDevice == null) return;
             DeviceDetail = await _deviceService.GetDeviceDetailAsync(_selectedDevice);
         }
     }

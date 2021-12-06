@@ -44,7 +44,7 @@ namespace AndroidManager.Views
 
         private void DeviceDetailNav_BackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs args)
         {
-            MainWindow.Current.NavigateToDevicesView();
+            MainWindow.Current.NavigateToDeviceView();
         }
 
         private void DeviceDetailNav_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)

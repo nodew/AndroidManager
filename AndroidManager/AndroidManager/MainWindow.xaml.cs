@@ -1,8 +1,10 @@
 ﻿using AndroidManager.Services;
+using AndroidManager.ViewModels;
 using AndroidManager.Views;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using SharpAdbClient;
 using Windows.ApplicationModel.Resources;
 using Windows.ApplicationModel.Resources.Core;
@@ -23,10 +25,12 @@ namespace AndroidManager
         public new static MainWindow Current => _instance;
         private readonly AppSettings _appSettings;
         private readonly ResourceLoader resourceLoader;
+        private MainWindowViewModel viewModel;
 
         public MainWindow()
         {
             _appSettings = ServicesProvider.GetService<AppSettings>();
+            viewModel = ServicesProvider.GetService<MainWindowViewModel>();
             resourceLoader = new ResourceLoader();
             this.Title = resourceLoader.GetString("AppName");
             this.InitializeComponent();
@@ -36,24 +40,24 @@ namespace AndroidManager
             _instance = this;
         }
 
-        private void MainFrame_Loaded(object sender, RoutedEventArgs e)
+        private void ContentFrameLoaded(object sender, RoutedEventArgs e)
         {
-            NavigateToDevicesView();
+            NavigateToDeviceView();
         }
 
-        public void NavigateToDevicesView()
+        public void NavigateToDeviceView()
         {
-            mainFrame.Content = new DevicesView();
+            mainContent.Content = new DeviceDetailLandingView();
         }
 
         public void NavigateToDeviceDetailPage(DeviceData deviceData)
         {
-            mainFrame.Navigate(typeof(DeviceDetailLandingView), deviceData);
+            mainContent.Navigate(typeof(DeviceDetailLandingView), deviceData);
         }
 
         public void NavigateToSettingsPage()
         {
-            mainFrame.Navigate(typeof(SettingsView));
+            mainContent.Navigate(typeof(SettingsView));
         }
 
         public void ApplyLanguageSetting(string language)
@@ -66,15 +70,15 @@ namespace AndroidManager
         {
             if (theme == "dark")
             {
-                mainFrame.RequestedTheme = ElementTheme.Dark;
+                mainWindow.RequestedTheme = ElementTheme.Dark;
             }
             else if (theme == "light")
             {
-                mainFrame.RequestedTheme = ElementTheme.Light;
+                mainWindow.RequestedTheme = ElementTheme.Light;
             }
             else
             {
-                mainFrame.RequestedTheme = GetSystemTheme();
+                mainWindow.RequestedTheme = GetSystemTheme();
             }
         }
 
@@ -87,6 +91,17 @@ namespace AndroidManager
                 return ElementTheme.Dark;
             }
             return ElementTheme.Light;
+        }
+
+        private void MainNavSelectionChanged(object sender, NavigationViewSelectionChangedEventArgs args)
+        {
+            if (args.IsSettingsSelected)
+            {
+                NavigateToSettingsPage();
+                return;
+            }
+            viewModel.SelectDeviceCommand.Execute(args.SelectedItem);
+            NavigateToDeviceView();
         }
     }
 }

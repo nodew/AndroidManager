@@ -11,14 +11,9 @@ namespace AndroidManager.ViewModels
     {
         private readonly Device _selectedDevice;
 
-        public DeviceDetailLandingViewModel(DevicesViewModel devicesViewModel)
+        public DeviceDetailLandingViewModel(MainWindowViewModel mainWindowViewModel)
         {
-            _selectedDevice = devicesViewModel.CurrentSelectedDevice;
-        }
-
-        public string NameOfSelectedDevice
-        {
-            get => _selectedDevice.DisplayName;
+            _selectedDevice = mainWindowViewModel.CurrentSelectedDevice;
         }
     }
 }

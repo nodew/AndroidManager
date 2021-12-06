@@ -28,10 +28,10 @@ namespace AndroidManager.ViewModels
         public PackagesViewModel(
             IAdbClient adbClient, 
             IDeviceService deviceService,
-            DevicesViewModel devicesViewModel
+            MainWindowViewModel mainWindowViewModel
         )
         {
-            DeviceData device = devicesViewModel.CurrentSelectedDevice;
+            DeviceData device = mainWindowViewModel.CurrentSelectedDevice;
             _deviceService = deviceService;
             _selectedDevice = device;
             _viewType = PackagesViewType.ThirdParty;

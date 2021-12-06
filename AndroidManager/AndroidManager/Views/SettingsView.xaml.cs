@@ -35,7 +35,7 @@ namespace AndroidManager.Views
 
         private void BackToMainPage(object sender, NavigationViewBackRequestedEventArgs args)
         {
-            MainWindow.Current.NavigateToDevicesView();
+            MainWindow.Current.NavigateToDeviceView();
         }
 
         private void LanguageSettingRadioGroup_Loaded(object sender, RoutedEventArgs e)

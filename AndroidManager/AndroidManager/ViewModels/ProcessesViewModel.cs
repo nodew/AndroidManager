@@ -21,10 +21,10 @@ namespace AndroidManager.ViewModels
         private ObservableCollection<AndroidProcess> _processes;
         private List<AndroidProcess> _originalOrderedProcesses;
 
-        public ProcessesViewModel(IAdbClient adbClient, DevicesViewModel devicesViewModel)
+        public ProcessesViewModel(IAdbClient adbClient, MainWindowViewModel mainWindowViewModel)
         {
             _adbClient = adbClient;
-            _device = devicesViewModel.CurrentSelectedDevice;
+            _device = mainWindowViewModel.CurrentSelectedDevice;
             _processes = new ObservableCollection<AndroidProcess>();
             _originalOrderedProcesses = new List<AndroidProcess>();
 

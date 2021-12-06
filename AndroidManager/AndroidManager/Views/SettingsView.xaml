@@ -20,18 +20,10 @@
         </Style>
     </Page.Resources>
     <Grid>
-        <NavigationView
-            PaneDisplayMode="Top"
-            IsBackButtonVisible="Visible"
-            IsSettingsVisible="False"
-            IsBackEnabled="True"
-            x:Uid="SettingsPageTitle"
-            Header="Setting"
-            BackRequested="BackToMainPage" >
-            <StackPanel Grid.Row="2" Margin="48 0 48 0" Orientation="Vertical" HorizontalAlignment="Left" >
-                <RadioButtons x:Name="languageSettingRadioGroup"
-                              Loaded="LanguageSettingRadioGroup_Loaded"
-                              Margin="0 24 0 0" >
+        <StackPanel Grid.Row="2" Margin="48 0 48 0" Orientation="Vertical" HorizontalAlignment="Left" >
+            <RadioButtons x:Name="languageSettingRadioGroup"
+                          Loaded="LanguageSettingRadioGroup_Loaded"
+                          Margin="0 24 0 0" >
                 <RadioButtons.Items>
                     <RadioButton x:Uid="SettingsPageLangDefault" Content="Default" Tag="default"></RadioButton>
                     <RadioButton Content="English" Tag="en-US"></RadioButton>
@@ -92,6 +84,5 @@
                     Style="{ThemeResource AccentButtonStyle}">
             </Button>
         </StackPanel>
-        </NavigationView>
     </Grid>
 </Page>
