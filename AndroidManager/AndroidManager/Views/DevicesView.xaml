@@ -30,11 +30,10 @@
                     ItemsSource="{x:Bind Devices}"
                     ItemTemplate="{StaticResource deviceCardTemplate}"
                     HorizontalContentAlignment="Stretch"
-                    Margin="12 0 0 0"
                     SelectionMode="Single" >
                     <GridView.ItemContainerStyle>
                         <Style TargetType="GridViewItem">
-                            <Setter Property="Margin" Value="12 12"/>
+                            <Setter Property="Margin" Value="0 12 24 12"/>
                             <Setter Property="Background" Value="{ThemeResource SystemListMediumColor}" />
                             <Setter Property="CornerRadius" Value="4" />
                         </Style>
@@ -106,33 +105,31 @@
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Border Grid.Row="0" BorderThickness="0 0 0 1" BorderBrush="{ThemeResource NavigationBarBorderColor}">
-            <Grid Grid.Row="0" Padding="48 0 48 0" Background="{ThemeResource NavigationBarBackgroud}">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="auto" />
-                </Grid.ColumnDefinitions>
-                <CommandBar Grid.Column="0" DefaultLabelPosition="Right" Padding="0" HorizontalAlignment="Left" Background="Transparent">
-                    <AppBarButton
-                        x:Name="addDeviceButton"
-                        Background="Transparent"
-                        Icon="Add"
-                        x:Uid="DevicesPageConnectButton"
-                        Label="Connect"
-                        Visibility="{x:Bind viewModel.AdbServerIsRunning, Mode=OneWay}"
-                        Click="ConnectToNewDevice" />
-                </CommandBar>
-                <CommandBar Grid.Column="1" DefaultLabelPosition="Right" Padding="0" Background="Transparent">
-                    <AppBarButton
-                        Background="Transparent"
-                        Icon="Setting"
-                        x:Uid="DevicesPageSettingButton"
-                        Label="Setting"
-                        Click="GotoSettingsPage" />
-                </CommandBar>
-            </Grid>
-        </Border>
-        <Grid Grid.Row="1" Margin="48 24 48 12">
+        <Grid Grid.Row="0" Padding="8 0 0 0" Background="{ThemeResource NavigationBarBackgroud}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+            <CommandBar Grid.Column="0" DefaultLabelPosition="Right" Padding="0" HorizontalAlignment="Left" Background="Transparent">
+                <AppBarButton
+                    x:Name="addDeviceButton"
+                    Background="Transparent"
+                    Icon="Add"
+                    x:Uid="DevicesPageConnectButton"
+                    Label="Connect"
+                    Visibility="{x:Bind viewModel.AdbServerIsRunning, Mode=OneWay}"
+                    Click="ConnectToNewDevice" />
+            </CommandBar>
+            <CommandBar Grid.Column="1" DefaultLabelPosition="Right" Padding="0" Background="Transparent">
+                <AppBarButton
+                    Background="Transparent"
+                    Icon="Setting"
+                    x:Uid="DevicesPageSettingButton"
+                    Label="Setting"
+                    Click="GotoSettingsPage" />
+            </CommandBar>
+        </Grid>
+        <Grid Grid.Row="1" Margin="24 36 0 24">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="auto" />

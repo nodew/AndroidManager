@@ -2,8 +2,10 @@
 using AndroidManager.Views;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using SharpAdbClient;
+using System;
 using Windows.ApplicationModel.Resources;
 using Windows.ApplicationModel.Resources.Core;
 using Windows.Globalization;
@@ -23,16 +25,19 @@ namespace AndroidManager
         public new static MainWindow Current => _instance;
         private readonly AppSettings _appSettings;
         private readonly ResourceLoader resourceLoader;
+        private AppWindowTitleBar _titleBar;
 
         public MainWindow()
         {
             _appSettings = ServicesProvider.GetService<AppSettings>();
             resourceLoader = new ResourceLoader();
-            this.Title = resourceLoader.GetString("AppName");
             this.InitializeComponent();
+            this.Title = resourceLoader.GetString("AppName");
 
             ApplyLanguageSetting(_appSettings.Language);
             ApplyThemeSetting(_appSettings.Theme);
+            SetupTitleBar();
+
             _instance = this;
         }
 
@@ -66,15 +71,47 @@ namespace AndroidManager
         {
             if (theme == "dark")
             {
-                mainFrame.RequestedTheme = ElementTheme.Dark;
+                mainWindowArea.RequestedTheme = ElementTheme.Dark;
             }
             else if (theme == "light")
             {
-                mainFrame.RequestedTheme = ElementTheme.Light;
+                mainWindowArea.RequestedTheme = ElementTheme.Light;
             }
             else
             {
-                mainFrame.RequestedTheme = GetSystemTheme();
+                mainWindowArea.RequestedTheme = GetSystemTheme();
+            }
+        }
+
+        private void SetupTitleBar()
+        {
+            if (AppWindowTitleBar.IsCustomizationSupported())
+            {
+                IntPtr windowHandle = WinRT.Interop.WindowNative.GetWindowHandle(this);
+                WindowId windowId = Win32Interop.GetWindowIdFromWindow(windowHandle);
+                AppWindow appWindow = AppWindow.GetFromWindowId(windowId);
+                _titleBar = appWindow.TitleBar;
+                _titleBar.ExtendsContentIntoTitleBar = true;
+                _titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
+                _titleBar.ButtonBackgroundColor = Colors.Transparent;
+                titleIcon.Margin = new Thickness(_titleBar.LeftInset + 12, 0, 8, 0);
+                titleText.Margin = new Thickness(0, 0, _titleBar.RightInset, 0);
+                titleBar.SizeChanged += HandleTitleBarSizeChanged;
+                titleBar.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void HandleTitleBarSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (_titleBar != null)
+            {
+                _titleBar.SetDragRectangles(
+                    new Windows.Graphics.RectInt32[] { 
+                        new Windows.Graphics.RectInt32()
+                        {
+                            Width = (int) e.NewSize.Width,
+                            Height = (int)e.NewSize.Height
+                        }});
             }
         }
 

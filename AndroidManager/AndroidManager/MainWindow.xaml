@@ -8,5 +8,32 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d" >
-    <Frame Name="mainFrame" Loaded="MainFrame_Loaded" />
+    <Grid x:Name="mainWindowArea">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel  
+            x:Name="titleBar" 
+            Grid.Row="0" 
+            Height="40"
+            Visibility="Collapsed"
+            Background="{ThemeResource NavigationBarBackgroud}"
+            HorizontalAlignment="Stretch"
+            Orientation="Horizontal" >
+            <Image
+                x:Name="titleIcon"
+                Width="24"
+                Height="24"
+                VerticalAlignment="Center"
+                Source="/Assets/app-icon.ico" />
+            <TextBlock
+                x:Name="titleText"
+                VerticalAlignment="Center"
+                Style="{ThemeResource CaptionTextBlockStyle}"
+                Text="{x:Bind Title}" />
+        </StackPanel>
+        <Frame Grid.Row="1" Name="mainFrame" Loaded="MainFrame_Loaded" />
+    </Grid>
 </Window>
