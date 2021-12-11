@@ -39,27 +39,23 @@ namespace AndroidManager
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
             m_window = new MainWindow();
+            
+            var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(m_window);
+            SetupInitialWindow(hwnd, 1280, 720);
+            
             m_window.Activate();
         }
 
-        public static ElementTheme RootTheme
+        private static void SetupInitialWindow(IntPtr hwnd, int width, int height)
         {
-            get
-            {
-                if (Window.Current.Content is FrameworkElement rootElement)
-                {
-                    return rootElement.RequestedTheme;
-                }
+            var dpi = PInvoke.User32.GetDpiForWindow(hwnd);
+            float scalingFactor = (float)dpi / 96;
+            width = (int)(width * scalingFactor);
+            height = (int)(height * scalingFactor);
 
-                return ElementTheme.Default;
-            }
-            set
-            {
-                if (Window.Current.Content is FrameworkElement rootElement)
-                {
-                    rootElement.RequestedTheme = value;
-                }
-            }
+            _ = PInvoke.User32.SetWindowPos(hwnd, PInvoke.User32.SpecialWindowHandles.HWND_TOP,
+                                        100, 100, width, height,
+                                        PInvoke.User32.SetWindowPosFlags.SWP_SHOWWINDOW);
         }
 
         private static IServiceProvider ConfigureServices()
