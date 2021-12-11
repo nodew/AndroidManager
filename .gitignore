@@ -2,4 +2,7 @@
 bin
 obj
 *.csproj.user
+*.wapproj.user
 UpgradeLog.htm
+AppPackages
+BundleArtifacts
