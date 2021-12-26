@@ -63,7 +63,6 @@
         </StackPanel>
         <ProgressBar Grid.Row="1" IsIndeterminate="True" ShowPaused="False" ShowError="False" Visibility="{x:Bind viewModel.InstallNewPackageCommand.IsRunning, Mode=OneWay}" />
         <Pivot Grid.Row="2"
-               Margin="24,0"
                x:Name="packagesViewPivot" >
             <i:Interaction.Behaviors>
                 <ic:EventTriggerBehavior SourceObject="{Binding ElementName=packagesViewPivot}" EventName="SelectionChanged">

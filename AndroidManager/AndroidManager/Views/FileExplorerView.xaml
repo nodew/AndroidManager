@@ -13,10 +13,18 @@
         <converter:DateTimeOffsetConverter x:Key="dateTimeConverter" />
         <converter:FileSizeConverter x:Key="fileSizeConverter" />
         <DataTemplate x:Name="folderItemTemplate" x:DataType="model:FileItem">
-            <StackPanel Orientation="Horizontal">
-                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xe8b7;" />
-                <TextBlock Margin="6 0 0 0" Text="{x:Bind Name}"></TextBlock>
-            </StackPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="100" />
+                    <ColumnDefinition Width="200" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" Orientation="Horizontal">
+                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xe8b7;" />
+                    <TextBlock Margin="6 0 0 0" Text="{x:Bind Name}"></TextBlock>
+                </StackPanel>
+                <TextBlock Grid.Column="2" HorizontalAlignment="Right" Text="{x:Bind Time, Converter={StaticResource dateTimeConverter}}"></TextBlock>
+            </Grid>
         </DataTemplate>
         <DataTemplate x:Name="fileItemTemplate" x:DataType="model:FileItem">
             <Grid>
@@ -44,7 +52,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
-            <CommandBar DefaultLabelPosition="Right" Background="Transparent" Margin="0 0 24 0">
+            <CommandBar DefaultLabelPosition="Right" Background="Transparent">
                 <AppBarButton
                     x:Name="uploadBtn"
                     x:Uid="FileExplorerPageUploadButton"
@@ -60,7 +68,7 @@
                     Command="{x:Bind viewModel.DownloadFileCommand}" />
             </CommandBar>
         </StackPanel>
-        <StackPanel Grid.Row="1" Margin="24 6" Orientation="Horizontal">
+        <StackPanel Grid.Row="1" Margin="12 6" Orientation="Horizontal">
             <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xed25;" />
             <TextBlock Margin="6 0 0 0" Text="{x:Bind viewModel.CurrentFolder, Mode=OneWay}" />
         </StackPanel>
@@ -71,7 +79,7 @@
             ItemsSource="{x:Bind viewModel.Files}"
             ItemTemplateSelector="{StaticResource fileItemDataTemplateSelector}"
             HorizontalContentAlignment="Stretch"
-            Margin="24 0"
+            Margin="12 0 0 0"
             ItemClick="FileListView_ItemClick"
             SelectionMode="Single" >
         </ListView>

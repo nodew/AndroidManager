@@ -51,7 +51,7 @@
             </NavigationViewItem>
         </NavigationView.MenuItems>
         <NavigationView.PaneFooter>
-            <StackPanel Margin="0 14 24 14">
+            <StackPanel Margin="0 14 12 14">
                 <TextBlock Text="{x:Bind viewModel.NameOfSelectedDevice}"></TextBlock>
             </StackPanel>
         </NavigationView.PaneFooter>
