@@ -45,7 +45,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
-            <CommandBar DefaultLabelPosition="Right" Background="Transparent" Margin="0 0 24 0">
+            <CommandBar DefaultLabelPosition="Right" Background="Transparent">
                 <AppBarButton
                     x:Name="installPackageButton"
                     x:Uid="PackagePageInstallPakcageButton"
